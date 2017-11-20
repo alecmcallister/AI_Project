@@ -1,30 +1,93 @@
 package ai.project;
 
 /**
- * This is a struct-like class to represent a pair of a slot type and time.
+ * TimePair Class
+ *
+ * Represents a pair of slot type and time.
+ *
+ * Another way of thinking of this class is as an "abstract slot," as described in the assignment specification.
+ * The purpose of this class is to represent some specific combination of day/start time, irrespective of min/max vals,
+ * assignments, etc.
  */
 public class TimePair {
     private SlotType type;
-    // Time is represented by a double because Java's Date class includes much more than we need.
-    // This is the hour of the day the time slot begins at (24 hour clock). May be X.5 to represent
-    // an X:30 start time.
+    // Time is represented by a double because Java's Date class includes much more than we need and will complicate
+    // usage considerably.
+    // This is the hour of the day the time slot begins at (24 hour clock). May be X.5 to represent an X:30 start time.
     private double time;
 
+    /**
+     * Constructor to build a TimePair from a partially-parsed input string.
+     *
+     * @param dayString Day string. Expect one of MO, TU, or FR.
+     * @param timeString Time string. Expected format H:MM or HH:MM.
+     * @param isLab Is this a lab slot? (If false, this is a lecture slot).
+     */
+    TimePair(String dayString, String timeString, boolean isLab) {
+        if (dayString.equalsIgnoreCase("mo")) {
+            if (isLab) type = SlotType.MW_LAB;
+            else type = SlotType.MWF_LEC;
+        }
+        else if (dayString.equalsIgnoreCase("tu")) {
+            if (isLab) type = SlotType.TT_LAB;
+            else type = SlotType.TT_LEC;
+        }
+        else{
+            // we've exhausted everything else -- default to Friday lab
+            type = SlotType.F_LAB;
+        }
 
+        // Assume well-formatted time string (which may have leading or trailing white space)
+        String trimString = timeString.trim();
+        String[] timeSegs = trimString.split(":");
+        int hour = Integer.parseInt(timeSegs[0]);
+        int mins = Integer.parseInt(timeSegs[1]);
+
+        double newTime = (double) hour;
+        newTime += (mins / 100);
+        this.time = boundTime(newTime);
+    }
+
+    /**
+     * Simple constructor. Takes a SlotType and a start time as a double, representing hour.
+     * The provided time will be rounded to the nearest half hour (0.5 in the double) as needed.
+     * Times that are out-of-bounds (less than 0 or > 23.5) will also be rounded.
+     *
+     * @param type The SlotType we want to construct a TimePair for.
+     * @param time The time the time pair is meant to represent, represented as a number of hours on a 24-hour clock.
+     */
     TimePair(SlotType type, double time) {
         this.type = type;
+        this.time = boundTime(time);
+    }
 
+    /**
+     * Puts a given time double within sensible bounds.
+     *
+     * @param inTime A time value that may not necessarily be within bounds or rounded to the nearest 0.5.
+     * @return A time value that is rounded and within boudns.
+     */
+    private double boundTime(double inTime) {
         // Range check on time val
-        if (time > 23.5 || time < 0.0) this.time = 0.0;
+        if (inTime > 23.5 || inTime < 0.0) {
+            inTime = 0.0;
+        }
         else {
             // Round time to nearest 0.5
-            this.time = Math.round(time * 2) / 2.0;
+            inTime = Math.round(inTime * 2) / 2.0;
         }
+        return inTime;
     }
 
     public SlotType getType() { return this.type; }
 
     public double getTime() { return this.time; }
+
+    public boolean isLecture() {
+        return ((type == SlotType.MWF_LEC) || (type == SlotType.TT_LEC));
+    }
+
+    // --------------- Overrides -----------------
 
     @Override
     public String toString() {

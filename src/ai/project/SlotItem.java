@@ -1,5 +1,7 @@
 package ai.project;
 
+import java.util.ArrayList;
+
 /**
  * SlotItem Class
  *
@@ -8,13 +10,19 @@ package ai.project;
  * Contains shared functionality for those classes.
  */
 public abstract class SlotItem {
-    String name;
-    int num;
+    String courseName;
+    int courseNum;
 
-    @Override
-    public int hashCode() {
-        int rv = name.hashCode() * 1000000;
-        rv += num * 1000;
-        return rv;
+    // Various structures to keep track of constraints for this item
+    private ArrayList<SlotItem> pairs;
+    private ArrayList<Preference> preferences;
+    private ArrayList<SlotItem> incompatible;
+    private ArrayList<TimeSlot> unwanted;
+
+    /** Simple struct-class for tracking preferences
+     */
+    private class Preference {
+        private TimeSlot slot;
+        private int preferenceValue;
     }
 }
