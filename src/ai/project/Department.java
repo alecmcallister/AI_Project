@@ -3,18 +3,18 @@ package ai.project;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-/*
-* Course
-* Type: cpsc
-* Num: 433
-* Lec: 01
-*
-* Lab
-* Tut: 01
-* Association: Type: cpsc
-*              Num: 433
-*              Lec: null if all Lec slots
-* */
+/**
+ * Department Class
+ *
+ * Contains data which is constant for a given department:
+ *  - Name of the department
+ *  - Table of possible time slots
+ *  - Table of all courses (labs and lectures)
+ *  - List of partial assignments
+ *
+ * This class includes methods to add time slots, lectures, and labs to the internal tables.
+ * There are also methods to set constraints on courses,
+ */
 
 public class Department {
     private String departmentName;
@@ -22,7 +22,7 @@ public class Department {
     private TimeTable timeTable;
     private CourseTable courseTable;
 
-    private ArrayList<String> partials;
+    private ArrayList<Assignments> partials;
 
 
     /**
@@ -36,8 +36,17 @@ public class Department {
         courseTable = new CourseTable();
     }
 
+    /**
+     * Gets the name of the department.
+     *
+     * @return The name of the department.
+     */
+    public String getDepartmentName() {
+        return departmentName;
+    }
 
-    // ------------- Table Adders -------------
+
+    // ------------- Data Adders -------------
 
     /**
      * Adds a TimeSlot to the TimeTable.
@@ -85,6 +94,29 @@ public class Department {
      */
     public void addLab(String courseName, int courseNum, int labNum, int lecNum) {
         courseTable.addLab(courseName, courseNum, labNum, lecNum);
+    }
+
+    /**
+     * Creates a partial assignment and adds it to the list of partial assignments.
+     * Because neither sample input file at this point includes example partial assignments,
+     * this method may be subject to change.
+     *
+     * @param courseName The name of the course being assigned.
+     * @param courseNum The number of the course being assigned.
+     * @param secNum The section number of the course (lab or tut #).
+     * @param isLab Are we assigning a lab?
+     * @param day The day string (as either MO, TU, or FR).
+     * @param time The time string (as either H:MM or HH:MM).
+     */
+    public void addPartial(String courseName, int courseNum, int secNum, boolean isLab, String day, String time) {
+        TimeSlot slot = timeTable.getSlot(day, time, isLab);
+        SlotItem course;
+        if (isLab)
+            course = courseTable.getLab(courseName, courseNum, secNum);
+        else
+            course = courseTable.getLecture(courseName, courseNum, secNum);
+
+        //if ((slot != null) && (course != null))            partials.add(new Assignment(slot, course));
     }
 
 
@@ -188,28 +220,91 @@ public class Department {
     }
 
 
-    // ------------- Table Getters -------------
+    // ------------- Data Getters -------------
 
+    /**
+     * Get the TimeSlot for a given TimePair, if one exists. Null otherwise.
+     *
+     * @param time TimePair to search the TimeTable for.
+     * @return The TimeSlot in the TimeTable that matches time, or null if it is not there.
+     */
     public TimeSlot getSlot(TimePair time) { return timeTable.getSlot(time); }
 
+    /**
+     * Try to find a TimeSlot in the TimeTable that matches the given TimeSlot.
+     * If a match is found, this will return the TimeSlot that equals (.equals()) the given TimeSlot.
+     * This can be, but is not necessarily, the same TimeSlot reference passed to the method.
+     *
+     * @param timeSlot TimeSlot to search the TimeTable for.
+     * @return A reference to the TimeSlot from the TimeTable which matches the TimeSlot given. Null if not found.
+     */
     public TimeSlot getSlot(TimeSlot timeSlot) {
         return timeTable.getSlot(timeSlot);
     }
 
+    /**
+     * Try to find a TimeSlot in the TimeTable for a given slot type and time.
+     * Returns the TimeSlot if it exists and null otherwise.
+     *
+     * @param type The type of slot to search for.
+     * @param time The time to search for, as a double (H.MM).
+     * @return The TimeSlot, if it exists. Null if it not.
+     */
     public TimeSlot getSlot(SlotType type, double time) { return timeTable.getSlot(type, time); }
 
+    /**
+     * Try to find a lecture or lab TimeSlot for the given day string and time string.
+     *
+     * @param day The day to search for, as either MO, TU, or FR.
+     * @param time The time to search for, as H:MM or HH:MM.
+     * @param isLab Are we looking for a lab slot?
+     * @return The TimeSlot if it exists, or null otherwise.
+     */
     public TimeSlot getSlot(String day, String time, boolean isLab) { return timeTable.getSlot(day, time, isLab);}
 
+    /**
+     * Get all TimeSlots in the TimeTable as an ArrayList.
+     * The returned collection is not guaranteed to be ordered.
+     *
+     * @return All TimeSlots in the TimeTable as an ArrayList.
+     */
     public ArrayList<TimeSlot> getAllTimeSlots() { return timeTable.getAllSlots(); }
 
-    public ArrayList<TimeSlot> getAllLabTimeSlots() { return timeTable.getAllLabSlots(); }
-
+    /**
+     * Get all lecture TimeSlots in the TimeTable as an ArrayList.
+     * The returned collection is not guaranteed to be ordered.
+     *
+     * @return All lab TimeSlots in the TimeTable as an ArrayList.
+     */
     public ArrayList<TimeSlot> getAllLectureSlots() { return timeTable.getAllLectureSlots(); }
 
+    /**
+     * Get all lab TimeSlots in the TimeTable as an ArrayList.
+     * The returned collection is not guaranteed to be ordered.
+     *
+     * @return All lab TimeSlots in the TimeTable as an ArrayList.
+     */
+    public ArrayList<TimeSlot> getAllLabTimeSlots() { return timeTable.getAllLabSlots(); }
+
+    /**
+     * Get all lectures in the CourseTable as a HashSet.
+     *
+     * @return The set of all lectures in the CourseTable.
+     */
     public HashSet<Lecture> getAllLectures() { return courseTable.getAllLectures(); }
 
+    /**
+     * Get all labs in the CourseTable as a HashSet.
+     *
+     * @return The set of all labs in the CourseTable.
+     */
     public HashSet<Lab> getAllLabs() { return courseTable.getAllLabs(); }
 
+    /**
+     * Get all lectures and labs in the CourseTable as a unified HashSet.
+     *
+     * @return The set of all courses in the CourseTable.
+     */
     public HashSet<SlotItem> getAllCourses() { return courseTable.getAllCourses(); }
 
 }

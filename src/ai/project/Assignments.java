@@ -1,41 +1,33 @@
 package ai.project;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
- * Assignment Class
+ * Assignments Class
  *
- * Represents an assignment of some number of courses to a TimeSlot.
- *
- * Note that this is separate from the TimeSlot class in order to allow TimeSlots to be constant. Because we may try
- * multiple different assignments to the same TimeSlot, if we did not distinguish between TimeSlots and Assignments,
- * we would be updating the same TimeSlot across the entire Department each time we tried a new assignment.
+ * Essentially a wrapper over a Map, which maps a TimeSlots to a set of Courses assigned to it.
  */
-public class Assignment {
+public class Assignments {
     private TimeSlot timeSlot;
     private ArrayList<SlotItem> assignments = new ArrayList<>();
 
-    /**
-     * De novo constructor. Requires a TimeSlot as an Assignment to no known time does't make any sense.
-     *
-     * @param timeSlot The TimeSlot to represent with this Assignment.
-     */
-    public Assignment(TimeSlot timeSlot) {
-        this.timeSlot = timeSlot;
+    private HashMap<TimeSlot, HashSet<SlotItem>> assigns;
+
+    public Assignments() {
+        assigns = new HashMap<>();
     }
 
     /**
-     * Copy constructor. Copies the TimeSlot and the list of courses assigned. The new list is independent of
-     * the previous one (i.e. changes to the list of courses in the new Assignment will not affec the list of
-     * courses in the old one).
+     * Copy constructor. Basically just copies the assignment hashmap.
      *
-     * @param other The Assignment to copy.
+     * @param other The Assignments to copy.
      */
-    public Assignment(Assignment other) {
-        this.timeSlot = other.getTimeSlot();
-        this.assignments = other.getAssignments();
-    }
+    public Assignments(Assignments other) {
+        
 
+    }
 
     /**
      * Assign a new course/lab to the slot managed by this assignment, iff the type of the new SlotItem matches
