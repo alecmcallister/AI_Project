@@ -10,7 +10,7 @@ package ai.project;
  *
  * This class is separate from a TimePair because it can be more efficient for some applications to just
  * instantiate a TimePair without having to build the whole wrapper as well. Additionally, the separation
- * permits using TimePairs as keys to a map of TimeSlots.
+ * permits using TimePairs as keys to a map of TimeSlots, as is used by the TimeTable class.
  */
 public class TimeSlot {
     private int max;

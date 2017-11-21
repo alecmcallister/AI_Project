@@ -6,10 +6,11 @@ import java.util.*;
  * TimeTable Class
  *
  * Organizes TimeSlots. This is intended to be used as a reference for all time slots available to a particular
- * department.
+ * department. The general use case is to create TimeSlots for every time slot read in by the parser, and put
+ * them into this class via calls to updateTable(). Individual slots can then be queried, and the class can return
+ * ArrayLists of all slots of either type (or both).
  *
  * This class works by organizing slots into two HashMaps, divided into Lecture and Lab slots.
- * Individual slots can be queried, and the class can return ArrayLists of all slots of either type (or both).
  */
 public class TimeTable {
     private HashMap<TimePair, TimeSlot> lecSlots;

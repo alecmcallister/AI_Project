@@ -3,7 +3,7 @@ package ai.project;
 /**
  * TimePair Class
  *
- * Represents a pair of slot type and time.
+ * Represents a pair of slot type and time, i.e. a day and a time on that day.
  *
  * Another way of thinking of this class is as an "abstract slot," as described in the assignment specification.
  * The purpose of this class is to represent some specific combination of day/start time, irrespective of min/max vals,
@@ -24,11 +24,13 @@ public class TimePair {
      * @param isLab Is this a lab slot? (If false, this is a lecture slot).
      */
     TimePair(String dayString, String timeString, boolean isLab) {
-        if (dayString.equalsIgnoreCase("mo")) {
+        // Take out any leading or trailing white space on day string
+        String trimDay = dayString.trim();
+        if (trimDay.equalsIgnoreCase("mo")) {
             if (isLab) type = SlotType.MW_LAB;
             else type = SlotType.MWF_LEC;
         }
-        else if (dayString.equalsIgnoreCase("tu")) {
+        else if (trimDay.equalsIgnoreCase("tu")) {
             if (isLab) type = SlotType.TT_LAB;
             else type = SlotType.TT_LEC;
         }
@@ -38,8 +40,8 @@ public class TimePair {
         }
 
         // Assume well-formatted time string (which may have leading or trailing white space)
-        String trimString = timeString.trim();
-        String[] timeSegs = trimString.split(":");
+        String trimTime = timeString.trim();
+        String[] timeSegs = trimTime.split(":");
         int hour = Integer.parseInt(timeSegs[0]);
         int mins = Integer.parseInt(timeSegs[1]);
 
