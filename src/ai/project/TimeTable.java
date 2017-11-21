@@ -78,6 +78,10 @@ public class TimeTable {
         return getSlot(temp);
     }
 
+    public TimeSlot getSlot(String day, String time, boolean isLab) {
+        return getSlot(new TimePair(day, time, isLab));
+    }
+
 
     /**
      * Returns an unordered ArrayList containing all time slots in the table.

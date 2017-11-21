@@ -14,16 +14,18 @@ import java.util.HashSet;
 public abstract class SlotItem {
     protected String courseName;
     protected int courseNum;
+    protected int secNum;
 
     // Various structures to keep track of constraints for this item
-    private HashSet<SlotItem> pairs;
-    private HashMap<TimeSlot, Integer> preferences;
     private HashSet<SlotItem> incompatible;
     private HashSet<TimeSlot> unwanted;
+    private HashMap<TimeSlot, Integer> preferences;
+    private HashSet<SlotItem> pairs;
 
-    public SlotItem(String name, int num) {
+    public SlotItem(String name, int courseNum, int secNum) {
         courseName = name;
-        courseNum = num;
+        this.courseNum = courseNum;
+        this.secNum = secNum;
         pairs = new HashSet<>();
         preferences = new HashMap<>();
         incompatible = new HashSet<>();
@@ -129,11 +131,22 @@ public abstract class SlotItem {
     }
 
     /**
+     * Predicate: is this an evening slot item? (I.e. does the section number begin with 9?)
+     *
+     * Note that this predicate assumes that the section number will have two digits.
+     *
+     * @return True if this is an evening slot, false otherwise.
+     */
+    public boolean isEvening() {
+        return (secNum / 10) == 9;
+    }
+
+
+    /**
      * Inherited predicate to obviate the need for reflexively checking the class of a lecture or lab.
      * @return True if this is a lecture, false if it is a lab.
      */
     public abstract boolean isLecture();
-
 
 
     // ------------ Getters ------------

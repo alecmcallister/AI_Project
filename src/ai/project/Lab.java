@@ -9,7 +9,6 @@ package ai.project;
  */
 public class Lab extends SlotItem {
     private Lecture parent;
-    private int labNum;
 
     /**
      * Parentless constructor.
@@ -19,8 +18,7 @@ public class Lab extends SlotItem {
      * @param labNum The number of the lab.
      */
     public Lab(String courseName, int courseNum, int labNum) {
-        super(courseName, courseNum);
-        this.labNum = labNum;
+        super(courseName, courseNum, labNum);
     }
 
     /**
@@ -45,7 +43,7 @@ public class Lab extends SlotItem {
     }
 
     public int getLabNum() {
-        return labNum;
+        return secNum;
     }
 
 
@@ -65,7 +63,7 @@ public class Lab extends SlotItem {
         String rv = getCourseString() + " ";
         if (hasParent())
             rv += parent.getIdString() + " ";
-        rv += "TUT " + labNum;
+        rv += "TUT " + secNum;
         return rv;
     }
 

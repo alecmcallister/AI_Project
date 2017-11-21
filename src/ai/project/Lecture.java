@@ -8,18 +8,16 @@ package ai.project;
  * Tracks a lecture number.
  */
 public class Lecture extends SlotItem {
-    private int lecNum;
 
     public Lecture(String courseName, int courseNum, int lecNum) {
-        super(courseName, courseNum);
-        this.lecNum = lecNum;
+        super(courseName, courseNum, lecNum);
     }
 
     public boolean isLecture() { return true; }
 
-    public int getLecNum() { return lecNum; }
+    public int getLecNum() { return secNum; }
 
-    public String getIdString() { return "LEC " + lecNum;}
+    public String getIdString() { return "LEC " + secNum;}
 
 
     // --------------- Overrides ---------------
