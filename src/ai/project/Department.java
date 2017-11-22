@@ -307,4 +307,12 @@ public class Department {
      */
     public HashSet<SlotItem> getAllCourses() { return courseTable.getAllCourses(); }
 
+    /**
+     * Retrieves a copy of the partial assignments managed by this Department. This may be somewhat inefficient if
+     * there are a large number of partial assignments, so use with caution.
+     *
+     * @return A copy of the partial assignments managed by this Department.
+     */
+    public Assignments getPartialAssignments() { return new Assignments(partialAssignments); }
+
 }
