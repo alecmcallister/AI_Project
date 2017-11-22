@@ -8,6 +8,9 @@ package ai.project;
  * Another way of thinking of this class is as an "abstract slot," as described in the assignment specification.
  * The purpose of this class is to represent some specific combination of day/start time, irrespective of min/max vals,
  * assignments, etc.
+ *
+ * Supports a variety of different construction options, including one that uses strings matching what we
+ * expect to see in the input files.
  */
 public class TimePair {
     private SlotType type;
@@ -81,10 +84,27 @@ public class TimePair {
         return inTime;
     }
 
+    /**
+     * Gets the abstract slot type (e.g. Mo/We/Fr Lecture, Tu/Th Lab, etc.) of this TimePair.
+     *
+     * @return The abstract slot type of this TimePair.
+     */
     public SlotType getType() { return this.type; }
 
+    /**
+     * Gets the time represented by this TimePair as a double. This double has the format
+     *  H.M
+     * where H is the number of hours on a 24-hour clock, and M is the number of minutes (should be either .5,
+     * representing :30, or .0, representing :00, unless something has gone wrong).
+     *
+     * @return The time of this TimeSlot as a double.
+     */
     public double getTime() { return this.time; }
 
+    /**
+     *
+     * @return
+     */
     public boolean isLecture() {
         return ((type == SlotType.MWF_LEC) || (type == SlotType.TT_LEC));
     }

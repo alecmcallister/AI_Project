@@ -11,6 +11,9 @@ package ai.project;
  * This class is separate from a TimePair because it can be more efficient for some applications to just
  * instantiate a TimePair without having to build the whole wrapper as well. Additionally, the separation
  * permits using TimePairs as keys to a map of TimeSlots, as is used by the TimeTable class.
+ *
+ * For most applications, however, TimeSlots should be preferred over TimePairs. The equals() operator has been
+ * overloaded such that TimeSlots with the same day/time (i.e. same TimePair) are considered equal.
  */
 public class TimeSlot {
     private int max;
@@ -196,7 +199,7 @@ public class TimeSlot {
 
         // Other TimeSlot comparison. Just check if the time pair is the same.
         if (other instanceof TimeSlot) {
-            return (this.timePair == ((TimeSlot)other).getTimePair());
+            return (this.timePair.equals(((TimeSlot)other).getTimePair()));
         }
 
         // Other is not a TimeSlot

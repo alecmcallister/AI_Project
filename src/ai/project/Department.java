@@ -21,8 +21,7 @@ public class Department {
 
     private TimeTable timeTable;
     private CourseTable courseTable;
-
-    private ArrayList<Assignments> partials;
+    private Assignments partialAssignments;
 
 
     /**
@@ -34,6 +33,7 @@ public class Department {
         this.departmentName = departmentName;
         timeTable = new TimeTable();
         courseTable = new CourseTable();
+        partialAssignments = new Assignments();
     }
 
     /**
@@ -97,7 +97,7 @@ public class Department {
     }
 
     /**
-     * Creates a partial assignment and adds it to the list of partial assignments.
+     * Creates a partial assignment and adds it to the set of partial assignments.
      * Because neither sample input file at this point includes example partial assignments,
      * this method may be subject to change.
      *
@@ -116,7 +116,7 @@ public class Department {
         else
             course = courseTable.getLecture(courseName, courseNum, secNum);
 
-        //if ((slot != null) && (course != null))            partials.add(new Assignment(slot, course));
+        if ((slot != null) && (course != null)) partialAssignments.assign(slot, course);
     }
 
 
