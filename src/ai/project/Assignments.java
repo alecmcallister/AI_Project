@@ -26,18 +26,20 @@ public class Assignments {
     private HashMap<TimeSlot, HashSet<SlotItem>> assignments;
     private Penalties penalties;
     private int evalScore;
-    private Map<SlotItem, UnfilledPairs> unfilledPairsMap;
+    private HashMap<SlotItem, UnfilledPairs> unfilledPairsMap;
 
     /**
      * Default constructor. Creates a new map of TimeSlots to courses.
-     * Requires Penalties as otherwise evaluation methods won't make any sense.
-     * The TimeTable is required to calculate a baseline penalty for the total number of courses and labs with minimums.
+     *
+     * @param penalties Penalties for the department. Needed, as otherwise evaluation methods won't make any sense.
+     * @param table TimeTable is required to calculate a baseline penalty for the total number of courses and labs with minimums.
      */
     public Assignments(Penalties penalties, TimeTable table) {
         assignments = new HashMap<>();
         this.penalties = penalties;
         evalScore = (table.getTotalLabsWithMinimum() * penalties.getLabsMin())
                     + (table.getTotalLecturesWithMinimum() * penalties.getCourseMin());
+        unfilledPairsMap = new HashMap<>();
     }
 
     /**
@@ -49,6 +51,7 @@ public class Assignments {
         this.assignments = other.getAllAssignments();
         this.penalties = other.getPenalties();
         this.evalScore = other.getEvalScore();
+        this.unfilledPairsMap = other.getUnfilledPairsMap();
     }
 
     /**
@@ -57,6 +60,7 @@ public class Assignments {
      *
      * This does not enforce maximum course constraints, though it could easily be made to do so.
      *
+     * @param timeSlot The new TimeSlot to be assigned to.
      * @param item The new SlotItem to be putatively added to the assignment.
      */
     public void addAssignment(TimeSlot timeSlot, SlotItem item) {
@@ -164,6 +168,12 @@ public class Assignments {
     public int getEvalScore() { return evalScore; }
 
 
+    /**
+     * Get all TimeSlots that overlap with a given TimeSlot and have something assigned to them.
+     *
+     * @param timeSlot The TimeSlot that might overlap with other TimeSlots in the Assignments.
+     * @return A set of all TimeSlots that have something assigned to them and overlap with timeSlot.
+     */
     public HashSet<TimeSlot> getAssignedOverlaps(TimeSlot timeSlot) {
         HashSet<TimeSlot> rv = new HashSet<>();
         SlotType slotType = timeSlot.getSlotType();
@@ -176,6 +186,12 @@ public class Assignments {
         return rv;
     }
 
+    /**
+     * Gets all SlotItems which exist in TimeSlots that overlap with a given timeSlot.
+     *
+     * @param timeSlot The TimeSlot that might overlap with other TimeSlots in the Assignments.
+     * @return A set of all SlotItems that have been assigned to TimeSlots which overlap with timeSlot.
+     */
     public HashSet<SlotItem> getAssignedOverlapCourses(TimeSlot timeSlot) {
         HashSet<SlotItem> rv = new HashSet<>();
         HashSet<TimeSlot> overlapTimes = getAssignedOverlaps(timeSlot);
@@ -184,6 +200,16 @@ public class Assignments {
         }
 
         return rv;
+    }
+
+    /**
+     * Gets a copy of the internal map which maps SlotItems to UnfilledPairs.
+     * Intended mainly for the copy constructor.
+     *
+     * @return A copy of the internal map which maps SlotItems to UnfilledPairs.
+     */
+    public HashMap<SlotItem, UnfilledPairs> getUnfilledPairsMap() {
+        return new HashMap<>(unfilledPairsMap);
     }
 
 
@@ -406,6 +432,7 @@ public class Assignments {
      * @param timeSlot The TimeSlot we may assign to.
      * @param item The item being assigned.
      * @return The soft constraint value for the given item assigned to the given TimeSlot for this Assignments instance.
+     *         This is returned as an Evaluated object, which is done to allow sorting of a set of different evals.
      */
     public Evaluated eval(TimeSlot timeSlot, SlotItem item) {
         int val = evalScore;
@@ -452,7 +479,7 @@ public class Assignments {
      * UnfilledPairs nested class
      *
      * The purpose of this class is to wrap a set of expected (but not yet assigned) paired SlotItems for a given
-     * SlotItem which *has* already been assigned. Every time we assign something that has a pair, we check to see
+     * SlotItem which *has* already been assigned. Every time we assign something new that has a pair, we check to see
      * if it has an unfilled pair waiting (i.e. if the other part of the pair has already been placed) and remove it
      * if so. In the process, we check whether the TimeSlot matches up, and if not, we add to the penalty.
      *

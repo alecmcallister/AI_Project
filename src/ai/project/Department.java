@@ -31,6 +31,8 @@ public class Department {
      * It's not yet clear how penalties will be taken as input, so this currently creates a placeholder
      * Penalties object with all 4 penalty types set to 0.
      *
+     * Partial Assignments are not created here, because they rely on the TimeTable having already been made.
+     *
      * Todo: Instantiate penalties properly.
      *
      * @param departmentName The name of the new department.
@@ -40,7 +42,6 @@ public class Department {
         timeTable = new TimeTable();
         courseTable = new CourseTable();
         penalties = new Penalties(0,0,0,0);
-        partialAssignments = new Assignments(penalties);
     }
 
     /**
@@ -116,6 +117,9 @@ public class Department {
      * @param time The time string (as either H:MM or HH:MM).
      */
     public void addPartial(String courseName, int courseNum, int secNum, boolean isLab, String day, String time) {
+        if (partialAssignments == null) {
+            partialAssignments = new Assignments(penalties, timeTable);
+        }
         TimeSlot slot = timeTable.getSlot(day, time, isLab);
         SlotItem course;
         if (isLab)
