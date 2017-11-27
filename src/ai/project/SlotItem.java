@@ -1,8 +1,6 @@
 package ai.project;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * SlotItem Class
@@ -100,6 +98,13 @@ public abstract class SlotItem {
     }
 
     /**
+     * Predicate: Does this SlotItem have any pair constraints?
+     *
+     * @return True if this SlotItem has pairs, false otherwise.
+     */
+    public boolean hasPairs() { return pairs.size() > 0; }
+
+    /**
      * Predicate: is this SlotItem incompatible with another?
      *
      * @param other A SlotItem which may be incompatible with this one.
@@ -141,6 +146,12 @@ public abstract class SlotItem {
         return (secNum / 10) == 9;
     }
 
+    /**
+     * Predicate: is this a 500-level course? (I.e. course num is 5??)
+     *
+     * @return True if this is a 500-level course, false otherwise.
+     */
+    public boolean is500Level() { return (courseNum >= 500 && courseNum <= 600);}
 
     /**
      * Inherited predicate to obviate the need for reflexively checking the class of a lecture or lab.
@@ -163,6 +174,31 @@ public abstract class SlotItem {
         Integer temp = preferences.get(time);
         if (temp != null) return temp;
         return 0;
+    }
+
+    /**
+     * Sums up the preference values for all slots other than the one given.
+     *
+     * @param time The TimeSlot to be excluded from the count of preference values.
+     * @return The sum of all preference values for every time slot other than the one given.
+     */
+    public int getPreferencesForOtherSlots(TimeSlot time) {
+        Integer prefForThisSlot = getPreferenceForSlot(time);
+        Collection<Integer> allPrefs = preferences.values();
+        int count = 0;
+        for (Integer i : allPrefs) {
+            count += i;
+        }
+        count -= prefForThisSlot;
+        return count;
+    }
+
+    public int getNumPairs() {
+        return pairs.size();
+    }
+
+    public HashSet<SlotItem> getPairs() {
+        return new HashSet<>(pairs);
     }
 
     public String getCourseString() {

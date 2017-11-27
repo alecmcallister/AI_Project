@@ -156,12 +156,49 @@ public class TimeSlot {
     }
 
     /**
+     * Predicate to determine whether this is an evening slot (time >= 18:00).
+     *
+     * @return True if this is an evening slot, false otherwise.
+     */
+    public boolean isEveningSlot() { return timePair.getTime() >= 18.0; }
+
+    /**
+     * Predicate to determine if two TimeSlots occur on the same day (e.g. MWF_LEC and F_LAB).
+     *
+     * @param other The TimeSlot that may share a day with this one.
+     * @return True if both TimeSlots can occur on the same day, or false otherwise.
+     */
+    public boolean overlapsDay(TimeSlot other) {
+        SlotType type = getSlotType();
+        SlotType otherType = other.getSlotType();
+        if (type == SlotType.MWF_LEC) {
+            return (otherType == SlotType.MWF_LEC
+                    || otherType == SlotType.MW_LAB
+                    || otherType == SlotType.F_LAB);
+        }
+        else if (type == SlotType.F_LAB) {
+            return (otherType == SlotType.F_LAB
+                    || otherType == SlotType.MWF_LEC);
+        }
+        else if (type == SlotType.MW_LAB) {
+            return (otherType == SlotType.MW_LAB
+                    || otherType == SlotType.MWF_LEC);
+        }
+        else {
+            // TuTh lab or lecture
+            return (otherType == SlotType.TT_LEC
+                    || otherType == SlotType.TT_LAB);
+        }
+    }
+
+    /**
      * Predicate to determine whether the TimeSlot overlaps with another TimeSlot.
      *
      * @param other The other TimeSlot to compare against.
      * @return True if the TimeSlots overlap; false otherwise.
      */
     public boolean overlaps(TimeSlot other) {
+        if (!(overlapsDay(other))) return false;
         double start = timePair.getTime();
         double otherStart = other.getTime();
         double end = start + getLength();

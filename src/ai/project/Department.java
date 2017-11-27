@@ -11,9 +11,10 @@ import java.util.HashSet;
  *  - Table of possible time slots
  *  - Table of all courses (labs and lectures)
  *  - List of partial assignments
+ *  - Penalty values
  *
  * This class includes methods to add time slots, lectures, and labs to the internal tables.
- * There are also methods to set constraints on courses,
+ * There are also methods to set constraints on courses, and to get various subsets of the data contained.
  */
 
 public class Department {
@@ -22,10 +23,15 @@ public class Department {
     private TimeTable timeTable;
     private CourseTable courseTable;
     private Assignments partialAssignments;
+    private Penalties penalties;
 
 
     /**
      * Base constructor. Sets name and initializes tables.
+     * It's not yet clear how penalties will be taken as input, so this currently creates a placeholder
+     * Penalties object with all 4 penalty types set to 0.
+     *
+     * Todo: Instantiate penalties properly.
      *
      * @param departmentName The name of the new department.
      */
@@ -33,7 +39,8 @@ public class Department {
         this.departmentName = departmentName;
         timeTable = new TimeTable();
         courseTable = new CourseTable();
-        partialAssignments = new Assignments();
+        penalties = new Penalties(0,0,0,0);
+        partialAssignments = new Assignments(penalties);
     }
 
     /**
@@ -116,7 +123,7 @@ public class Department {
         else
             course = courseTable.getLecture(courseName, courseNum, secNum);
 
-        if ((slot != null) && (course != null)) partialAssignments.assign(slot, course);
+        if ((slot != null) && (course != null)) partialAssignments.addAssignment(slot, course);
     }
 
 

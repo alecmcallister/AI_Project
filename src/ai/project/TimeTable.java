@@ -10,15 +10,24 @@ import java.util.*;
  * them into this class via calls to updateTable(). Individual slots can then be queried, and the class can return
  * ArrayLists of all slots of either type (or both).
  *
+ * The TimeTable class also keeps track of the total number of lectures and labs that have a minimum value
+ * (i.e. min > 0). This is to improve efficiency of eval calculations for assignments down the line, because it allows
+ * us to get a "baseline" penalty -- that is, the penalty for not meeting the minimum number of courses for any
+ * TimeSlot, which is what we will have if no courses are assigned yet.
+ *
  * This class works by organizing slots into two HashMaps, divided into Lecture and Lab slots.
  */
 public class TimeTable {
     private HashMap<TimePair, TimeSlot> lecSlots;
     private HashMap<TimePair, TimeSlot> labSlots;
+    private int totalLecturesWithMinimum;
+    private int totalLabsWithMinimum;
 
     public TimeTable() {
         lecSlots = new HashMap<>();
         labSlots = new HashMap<>();
+        totalLecturesWithMinimum = 0;
+        totalLabsWithMinimum = 0;
     }
 
     /**
@@ -30,13 +39,25 @@ public class TimeTable {
     public void updateTable(TimeSlot slot) {
         if (slot.isLectureSlot()) {
             TimeSlot oldSlot = lecSlots.get(slot);
-            if (oldSlot != null) lecSlots.replace(slot.getTimePair(), slot);
-            else lecSlots.put(slot.getTimePair(), slot);
+            if (oldSlot != null) {
+                if (oldSlot.getMin() > 0) totalLecturesWithMinimum--;
+                lecSlots.replace(slot.getTimePair(), slot);
+            }
+            else {
+                lecSlots.put(slot.getTimePair(), slot);
+            }
+            if (slot.getMin() > 0) totalLecturesWithMinimum++;
         }
         else {
             TimeSlot oldSlot = labSlots.get(slot);
-            if (oldSlot != null) labSlots.replace(slot.getTimePair(), slot);
-            else labSlots.put(slot.getTimePair(), slot);
+            if (oldSlot != null) {
+                if (oldSlot.getMin() > 0) totalLabsWithMinimum--;
+                labSlots.replace(slot.getTimePair(), slot);
+            }
+            else {
+                labSlots.put(slot.getTimePair(), slot);
+            }
+            if (slot.getMin() > 0) totalLabsWithMinimum++;
         }
     }
 
@@ -116,6 +137,14 @@ public class TimeTable {
      */
     public ArrayList<TimeSlot> getAllLectureSlots() {
         return new ArrayList<>(lecSlots.values());
+    }
+
+    public int getTotalLecturesWithMinimum() {
+        return totalLecturesWithMinimum;
+    }
+
+    public int getTotalLabsWithMinimum() {
+        return totalLabsWithMinimum;
     }
 
     /**
