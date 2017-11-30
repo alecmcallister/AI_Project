@@ -62,10 +62,10 @@ public abstract class SlotItem {
      * Add a new incompatibility between this TimeSlot and another. This will succeed unless the new item is
      * identical to this one (makes no sense) or the new SlotItem is already in the list of incompatibilities.
      *
-     * This will also check if the new SlotItem also contains the incompatibility, and will call addIncomptability
+     * This will also check if the new SlotItem also contains the incompatibility, and will call addIncompatibility
      * on it if not.
      *
-     * @param other The SlotItem that this SlotItem is to be considered incopmatible with.
+     * @param other The SlotItem that this SlotItem is to be considered incompatible with.
      */
     public void addIncompatibility(SlotItem other) {
         if (!this.equals(other))

@@ -109,6 +109,10 @@ public class Assignments {
      *
      * N.B. This does not actually assign anything to the set of assignments. The addAssignment() method must still
      * be called if we want to modify the Assignments.
+     *
+     * @param timeTable The TimeTable with all valid TimeSlots for the Department. Needed because an Assignments instance
+     *                  is not aware of any TimeSlots that it doesn't yet assign anything to.
+     * @param slotItem The SlotItem we want to assign.
      */
     public TreeSet<Evaluated> assign(TimeTable timeTable, SlotItem slotItem) {
         TreeSet<Evaluated> rv = new TreeSet<>(new EvalCompare());
@@ -137,7 +141,10 @@ public class Assignments {
      * @return The set of assignments for the given TimeSlot if it exists in these Assignments. If not, returns null.
      */
     public HashSet<SlotItem> getAssignment(TimeSlot timeSlot) {
-        return new HashSet<SlotItem>(assignments.get(timeSlot));
+        HashSet<SlotItem> assigned = assignments.get(timeSlot);
+        if (assigned == null) return null;
+
+        return new HashSet<>(assignments.get(timeSlot));
     }
 
     /**
