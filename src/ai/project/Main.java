@@ -9,8 +9,8 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String args[]) {
-        String fileName1 = "deptinst1.txt";
-        String fileName2 = "deptinst2.txt";
+        String fileName1 = System.getProperty("user.dir") + "\\deptinst1.txt";
+        String fileName2 = System.getProperty("user.dir") + "\\deptinst2.txt";
         readFile(fileName1);
         readFile(fileName2);
 
@@ -34,7 +34,7 @@ public class Main {
         try {
             // FileReader reads text files in the default encoding.
             FileReader fileReader =
-                    new FileReader("src/" + fileName);
+                    new FileReader(fileName);
 
             // Always wrap FileReader in BufferedReader.
             BufferedReader bufferedReader =
@@ -110,15 +110,13 @@ public class Main {
         }
         catch(FileNotFoundException ex) {
             System.out.println(
-                    "Unable to open file '" +
+                    "Unable to open file, file not found '" +
                             fileName + "'");
         }
         catch(IOException ex) {
             System.out.println(
                     "Error reading file '"
                             + fileName + "'");
-            // Or we could just do this:
-            // ex.printStackTrace();
         }
         
         System.out.println("NOT COMPATIBLE COURSES ARE");
