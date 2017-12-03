@@ -47,6 +47,7 @@ public class OTree {
 		{	
 			m_pDept = pDept;
 			m_pTbl = pDept.getTimeTable();
+			m_pLeafs = new ArrayDeque<OTree>();
 			
 			// Default: start from s0
 			if( null == pAssignedList || null == pUnassignedList )
