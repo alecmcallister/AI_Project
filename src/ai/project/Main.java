@@ -28,6 +28,11 @@ public class Main {
     	Department department = readFile(fileName);  
     	
     	System.out.println("Department: " + department.getDepartmentName());
+    	
+    	OTree orTree = new OTree(department, null, null);
+    	orTree = orTree.genSolution();
+    	
+    	System.out.println("Valid solution found: " + orTree.isValid());
     }
     
     public static Department readFile(String fileName) 
@@ -188,7 +193,6 @@ public class Main {
                 	
                 	
                 	//notCompatible.add(new SlotItem[] { course1, course2 });
-                	System.out.println("Adding incompatibility for " + course1.toString() + " - " + course2.toString());
                 	//course1.addIncompatibility(course2);
                 	department.addIncompatible(course1.courseName, course1.courseNum, course1.getClass() == Lab.class, course1.secNum, course2.courseName, course2.courseNum, course2.getClass() == Lab.class, course2.secNum);
                 } 
