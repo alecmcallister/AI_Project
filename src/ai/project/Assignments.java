@@ -471,11 +471,14 @@ public class Assignments {
         }
 
         // Check for section collisions.
-        for (SlotItem assigned : getAssignment(timeSlot)) {
-            if (((item.isLecture() && assigned.isLecture())
-                    || (!item.isLecture() && !assigned.isLecture()))
-                    && item.sameCourse(assigned)) {
-                val += penalties.getSection();
+        if (numAssigned > 0) {
+            // No section collisions if nothing is assigned here
+            for (SlotItem assigned : getAssignment(timeSlot)) {
+                if (((item.isLecture() && assigned.isLecture())
+                        || (!item.isLecture() && !assigned.isLecture()))
+                        && item.sameCourse(assigned)) {
+                    val += penalties.getSection();
+                }
             }
         }
 
