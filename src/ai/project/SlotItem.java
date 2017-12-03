@@ -38,11 +38,12 @@ public abstract class SlotItem {
      *
      * @param pair The SlotItem to be considered as a pair to this SlotItem.
      */
-    public void addPair(SlotItem pair) {
-        if (!this.equals(pair))
-            pairs.add(pair);
-        if (!pair.isPair(this))
-            pair.addPair(this);
+    public void addPair(SlotItem other) {
+        if (!this.equals(other)) {
+            pairs.add(other);
+            if (!other.isPair(this))
+                other.addPair(this);
+        }
     }
 
     /**
@@ -68,10 +69,11 @@ public abstract class SlotItem {
      * @param other The SlotItem that this SlotItem is to be considered incompatible with.
      */
     public void addIncompatibility(SlotItem other) {
-        if (!this.equals(other))
+        if (!this.equals(other)) {
             incompatible.add(other);
-        if (!other.incompatibleWith(this))
-            other.addIncompatibility(this);
+            if (!other.incompatibleWith(this))
+                other.addIncompatibility(this);
+        }
     }
 
     /**
