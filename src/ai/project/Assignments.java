@@ -146,6 +146,16 @@ public class Assignments {
 
         return new HashSet<>(assignments.get(timeSlot));
     }
+    
+    public TimeSlot getTimeSlot(SlotItem slotItem)
+    {
+    	for (TimeSlot element : assignments.keySet())
+		{
+			if (assignments.get(element).contains(slotItem))
+				return element;
+		}
+    	return null;
+    }
 
     /**
      * Get the number of SlotItems (lectures or labs) assigned to the given TimeSlot.
