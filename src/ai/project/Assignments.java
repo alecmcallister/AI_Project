@@ -156,7 +156,7 @@ public class Assignments {
      */
     public int getNumAssigned(TimeSlot timeSlot) {
         HashSet<SlotItem> set = assignments.get(timeSlot);
-        return (timeSlot == null) ? 0 : set.size();
+        return (set == null) ? 0 : set.size();
     }
 
     /**
