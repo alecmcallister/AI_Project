@@ -102,8 +102,9 @@ public class TimePair {
     public double getTime() { return this.time; }
 
     /**
+     *Predicate: Does this time pair belong to a lecture?
      *
-     * @return
+     * @return True if this is a lecture time (MWF lecture or TuTh lecture). False if it's a tutorial time.
      */
     public boolean isLecture() {
         return ((type == SlotType.MWF_LEC) || (type == SlotType.TT_LEC));

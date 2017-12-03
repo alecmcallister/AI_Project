@@ -11,9 +11,10 @@ import java.util.HashSet;
  *  - Table of possible time slots
  *  - Table of all courses (labs and lectures)
  *  - List of partial assignments
+ *  - Penalty values
  *
  * This class includes methods to add time slots, lectures, and labs to the internal tables.
- * There are also methods to set constraints on courses,
+ * There are also methods to set constraints on courses, and to get various subsets of the data contained.
  */
 
 public class Department {
@@ -22,10 +23,14 @@ public class Department {
     private TimeTable timeTable;
     private CourseTable courseTable;
     private Assignments partialAssignments;
-
+    private Penalties penalties;
 
     /**
      * Base constructor. Sets name and initializes tables.
+     * It's not yet clear how penalties will be taken as input, so this currently creates a placeholder
+     * Penalties object with all 4 penalty types set to 0.
+     *
+     * Partial Assignments are not created here, because they rely on the TimeTable having already been made.
      *
      * @param departmentName The name of the new department.
      */
@@ -33,7 +38,35 @@ public class Department {
         this.departmentName = departmentName;
         timeTable = new TimeTable();
         courseTable = new CourseTable();
-        partialAssignments = new Assignments();
+        penalties = new Penalties(0,0,0,0);
+    }
+
+    /**
+     * Constructor that takes a Penalties instance.
+     * Presumably, regardless of how penalties are passed in, we can construct the Penalties object somewhere else.
+     * If we can pass them in through the constructor (i.e. penalty values are known before we need to start
+     * parsing) then we can set them here.
+     *
+     * Partial Assignments are not created here, because they rely on the TimeTable having already been made.
+     *
+     * @param departmentName The name of the new department.
+     */
+    public Department(String departmentName, Penalties penalties) {
+        this.departmentName = departmentName;
+        timeTable = new TimeTable();
+        courseTable = new CourseTable();
+        this.penalties = penalties;
+    }
+
+    /**
+     * Set the Penalties for the Department. This should be used if, for some reason, we won't know the Penalties
+     * before initialization. If that is the case, then the constructor that takes a Penalties instance should be
+     * used instead.
+     *
+     * @param penalties The soft constraint Penalties to be used for this Department.
+     */
+    public void setPenalties(Penalties penalties) {
+        this.penalties = penalties;
     }
 
     /**
@@ -109,6 +142,9 @@ public class Department {
      * @param time The time string (as either H:MM or HH:MM).
      */
     public void addPartial(String courseName, int courseNum, int secNum, boolean isLab, String day, String time) {
+        if (partialAssignments == null) {
+            partialAssignments = new Assignments(penalties, timeTable);
+        }
         TimeSlot slot = timeTable.getSlot(day, time, isLab);
         SlotItem course;
         if (isLab)
@@ -116,7 +152,7 @@ public class Department {
         else
             course = courseTable.getLecture(courseName, courseNum, secNum);
 
-        if ((slot != null) && (course != null)) partialAssignments.assign(slot, course);
+        if ((slot != null) && (course != null)) partialAssignments.addAssignment(slot, course);
     }
 
 
