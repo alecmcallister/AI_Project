@@ -30,6 +30,9 @@ public class Main {
     	System.out.println("Department: " + department.getDepartmentName());
     	
     	OTree orTree = new OTree(department, null, null);
+    	
+    	System.out.println("Created or tree");
+    	
     	orTree = orTree.genSolution();
     	
     	System.out.println("Valid solution found: " + orTree.isValid());

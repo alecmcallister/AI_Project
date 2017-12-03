@@ -1,6 +1,9 @@
 package ai.project;
 
+import java.time.chrono.JapaneseChronology;
 import java.util.*;
+
+import jdk.nashorn.internal.runtime.linker.JavaAdapterFactory;
 
 /*
  * OTree is a recursive tree in that every node of the OTree is, itself, an Or Tree as well.
@@ -25,6 +28,7 @@ public class OTree {
 	private Queue<OTree> 		m_pLeafs;
 	private eSolution 			m_eSol;
 	private boolean 			m_bInitialized;
+	private static Random		m_pRand;
 	
 	/********************************************************************************\
 	 * Getters/Setters																*
@@ -48,6 +52,9 @@ public class OTree {
 			m_pDept = pDept;
 			m_pTbl = pDept.getTimeTable();
 			m_pLeafs = new ArrayDeque<OTree>();
+			
+			if( null == m_pRand )
+				m_pRand = new Random( System.currentTimeMillis() );
 			
 			// Default: start from s0
 			if( null == pAssignedList || null == pUnassignedList )
@@ -75,6 +82,8 @@ public class OTree {
 		// Local Variables
 		OTree pReturnTree = null;
 		
+		System.out.println("Num Unassigned? " + m_pUnassignedList.size() );
+		
 		if( m_bInitialized )
 		{
 			if( m_eSol == eSolution.YES )
@@ -82,6 +91,9 @@ public class OTree {
 		
 			// Generate Leafs
 			this.altern();
+			
+			System.out.println("Alterned " + m_pLeafs.size() + " Leafs");
+			
 			
 			// No Leafs could be generated? No Valid Solution.
 			if( m_pLeafs.isEmpty() )
@@ -110,7 +122,6 @@ public class OTree {
 	private void altern()
 	{
 		// Local Variables
-		Random pRand;
 		SlotItem pNewItem;
 		TreeSet<Evaluated> pLeafs;
 		Assignments pNxtAssign;
@@ -120,9 +131,10 @@ public class OTree {
 		if( !m_pUnassignedList.isEmpty() )
 		{
 			// Pull Item and get list of possible assignments
-			pRand = new Random();
-			pNewItem = m_pUnassignedList.remove( pRand.nextInt(m_pUnassignedList.size()) );
+			pNewItem = m_pUnassignedList.remove( m_pRand.nextInt(m_pUnassignedList.size()) );
 			pLeafs = m_pAssigned.assign(m_pTbl, pNewItem);
+			
+			System.out.println( "\tNum Leafs assigned: " + pLeafs.size() );
 			 
 			// Generate Leafs based on evaluated assignments
 			for( Evaluated pEval : pLeafs )
