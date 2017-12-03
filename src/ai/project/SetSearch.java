@@ -10,4 +10,9 @@ public class SetSearch
 	{
 		
 	}
+	
+	public void DoTheSearchAlready(Assignments a, Assignments b)
+	{
+		Assignments partial;
+	}
 }
