@@ -305,6 +305,13 @@ public class Department {
      * @return All TimeSlots in the TimeTable as an ArrayList.
      */
     public ArrayList<TimeSlot> getAllTimeSlots() { return timeTable.getAllSlots(); }
+    
+    /**
+     * Get the TimeTable object.
+     * 
+     * @return The aggregated Time Table for the department.
+     */
+    public TimeTable getTimeTable() { return timeTable; }
 
     /**
      * Get all lecture TimeSlots in the TimeTable as an ArrayList.
