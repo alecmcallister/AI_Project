@@ -146,6 +146,16 @@ public class Assignments {
 
         return new HashSet<>(assignments.get(timeSlot));
     }
+    
+    public TimeSlot getTimeSlot(SlotItem slotItem)
+    {
+    	for (TimeSlot element : assignments.keySet())
+		{
+			if (assignments.get(element).contains(slotItem))
+				return element;
+		}
+    	return null;
+    }
 
     /**
      * Get the number of SlotItems (lectures or labs) assigned to the given TimeSlot.
@@ -156,7 +166,7 @@ public class Assignments {
      */
     public int getNumAssigned(TimeSlot timeSlot) {
         HashSet<SlotItem> set = assignments.get(timeSlot);
-        return (timeSlot == null) ? 0 : set.size();
+        return (set == null) ? 0 : set.size();
     }
 
     /**
@@ -471,11 +481,14 @@ public class Assignments {
         }
 
         // Check for section collisions.
-        for (SlotItem assigned : getAssignment(timeSlot)) {
-            if (((item.isLecture() && assigned.isLecture())
-                    || (!item.isLecture() && !assigned.isLecture()))
-                    && item.sameCourse(assigned)) {
-                val += penalties.getSection();
+        if (numAssigned > 0) {
+            // No section collisions if nothing is assigned here
+            for (SlotItem assigned : getAssignment(timeSlot)) {
+                if (((item.isLecture() && assigned.isLecture())
+                        || (!item.isLecture() && !assigned.isLecture()))
+                        && item.sameCourse(assigned)) {
+                    val += penalties.getSection();
+                }
             }
         }
 
