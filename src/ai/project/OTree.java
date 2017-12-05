@@ -20,12 +20,12 @@ public class OTree {
 	 * Private Variables
 	 */
 	private ArrayList<SlotItem> m_pUnassignedList;
-	private Department 			m_pDept;
-	private Assignments 		m_pAssigned;
-	private TimeTable 			m_pTbl;
-	private Queue<OTree> 		m_pLeafs;
+	private Department m_pDept;
+	private Assignments m_pAssigned;
+	private TimeTable m_pTbl;
+	private Queue<OTree> m_pLeafs;
 	private eSolution 			m_eSol;
-	private boolean 			m_bInitialized;
+	private boolean m_bInitialized;
 	private static Random		m_pRand;
 	
 	/********************************************************************************\
