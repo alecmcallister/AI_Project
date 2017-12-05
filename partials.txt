@@ -1,5 +1,5 @@
 Name:
-department2
+only_partials
 
 Course slots:
 MO,  8:00, 2, 1

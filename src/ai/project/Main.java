@@ -31,8 +31,8 @@ public class Main {
 //        readFile(fileName1);
 //        readFile(fileName2);        
 
-//        String fileName1 = System.getProperty("user.dir") + "\\deptinst3.txt";
-        String fileName1 = System.getProperty("user.dir") + "\\partials.txt";
+        String fileName1 = System.getProperty("user.dir") + "\\deptinst3.txt";
+//        String fileName1 = System.getProperty("user.dir") + "\\partials.txt";
 
         DoTest(fileName1);
     }
