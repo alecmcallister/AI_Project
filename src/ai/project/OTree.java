@@ -117,7 +117,7 @@ public class OTree {
 	{
 		// Local Variables
 		SlotItem pNewItem;
-		TreeSet<Evaluated> pLeafs;
+		ArrayList<Evaluated> pLeafs;
 		Assignments pNxtAssign;
 		m_pLeafs.clear(); // Clear Leafs at this level to force Depth-first search
 		

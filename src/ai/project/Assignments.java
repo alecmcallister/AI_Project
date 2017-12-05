@@ -114,8 +114,8 @@ public class Assignments {
      *                  is not aware of any TimeSlots that it doesn't yet assign anything to.
      * @param slotItem The SlotItem we want to assign.
      */
-    public TreeSet<Evaluated> assign(TimeTable timeTable, SlotItem slotItem) {
-        TreeSet<Evaluated> rv = new TreeSet<>(new EvalCompare());
+    public ArrayList<Evaluated> assign(TimeTable timeTable, SlotItem slotItem) {
+        ArrayList<Evaluated> rv = new ArrayList<>();
 
         // Save a bit of processing by only looking at slots that match the type of slotItem
         ArrayList<TimeSlot> slots = slotItem.isLecture() ? timeTable.getAllLectureSlots() : timeTable.getAllLabSlots();
@@ -123,6 +123,9 @@ public class Assignments {
         for (TimeSlot slot : slots) {
             if (constr(slot, slotItem)) rv.add(eval(slot, slotItem));
         }
+
+        // Randomize ordering
+        Collections.shuffle(rv);
 
         return rv;
     }
