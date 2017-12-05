@@ -220,7 +220,7 @@ public class Department {
      * @param isLab Is the course a lab?
      */
     public void addUnwanted(String courseName, int courseNum, int secNum, String day, String time, boolean isLab) {
-        TimeSlot slot = timeTable.getSlot(day, time, /*isLab*/ isLab);
+        TimeSlot slot = timeTable.getSlot(day, time, isLab);
         if (isLab)
             courseTable.addUnwantedLab(courseName, courseNum, secNum, slot);
         else

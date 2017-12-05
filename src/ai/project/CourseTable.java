@@ -410,4 +410,34 @@ public class CourseTable {
         private HashMap<Integer, Lecture> lectures = new HashMap<>();
         private HashMap<Integer, Lab> labs = new HashMap<>();
     }
+
+    private class LabSecPair {
+        public int lecNum;
+        public int labNum;
+
+        LabSecPair(int lecNum, int labNum) {
+            this.lecNum = lecNum;
+            this.labNum = labNum;
+        }
+
+        LabSecPair(int labNum) {
+            this.labNum = labNum;
+            lecNum = -1;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            // Self comparison
+            if (this == other) return true;
+
+            // Other LabSecPair comparison. Check if both slots are the same.
+            if (other instanceof LabSecPair) {
+                return ((this.lecNum == ((LabSecPair) other).lecNum)
+                        && (this.labNum == ((LabSecPair) other).labNum));
+            }
+
+            // Other is not a LabSecPair
+            return false;
+        }
+    }
 }
