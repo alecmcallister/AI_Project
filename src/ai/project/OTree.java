@@ -69,6 +69,9 @@ public class OTree {
 			}
 		}
 	}
+	
+	int count = 0;
+	
 	/**
 	 * Executes the Or-Tree functionality on its current assignment. Evaluates Depthfirst running altern to generate leafs.
 	 * leafs are only generated if something can be successfully assigned to a timeslot. If nothing can be assigned, then leaf evaluates to no and returns.
@@ -76,8 +79,14 @@ public class OTree {
 	 * 
 	 * @return Either a Generated Solution that may or may not be valid (check isValid()) or null if OTree wasn't initialized properly.
 	 */
-	public OTree genSolution( )
-	{
+	public OTree genSolution()
+	{		
+		for (int i = 0; i < 3; i++)
+			System.out.printf("%s", ( ( i > (count) ? " " : ".") ));
+		
+		System.out.printf("\r");
+		count = (count > 3) ? 0 : count + 1;
+
 		// Local Variables
 		OTree pReturnTree = null;
 		
