@@ -44,7 +44,8 @@ public class Main
     		
         String fileName1 = System.getProperty("user.dir") + dir + "deptinst3.txt";
 
-        DoTest(fileName1);
+//        DoTest(fileName1);
+        OTreeOptimized m = new OTreeOptimized(null, null, null);
     }
     
     public static void DoTest(String fileName) 

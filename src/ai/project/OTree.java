@@ -24,9 +24,9 @@ public class OTree {
 	private Assignments m_pAssigned;
 	private TimeTable m_pTbl;
 	private Queue<OTree> m_pLeafs;
-	private eSolution 			m_eSol;
+	private eSolution m_eSol;
 	private boolean m_bInitialized;
-	private static Random		m_pRand;
+	private static Random m_pRand;
 	
 	/********************************************************************************\
 	 * Getters/Setters																*
