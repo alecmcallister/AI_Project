@@ -10,7 +10,7 @@ import java.nio.file.*;
 public class Main {
     public static void main(String args[]) 
     {
-        String fileName1 = "deptinst3.txt";
+        String fileName1 = "deptinst1.txt";
 
         DoTest(fileName1);
     }
@@ -23,18 +23,36 @@ public class Main {
     	
     	ArrayList<Assignments> F = new ArrayList<Assignments>();
     	
+    	OTree orTree = new OTree(department, null, null);
+    	
+    	final long startTime = System.currentTimeMillis();
+		orTree = orTree.genSolution( 0 );
+    	final long endTime = System.currentTimeMillis();
+    	
+    	System.out.println( "Total execution time: " + Long.toString(endTime - startTime) );
+    	
+    	return;
+    	
+    	/*
     	while (F.size() < 2)
 		{
-        	OTree orTree = new OTree(department, null, null);
+        	orTree = new OTree(department, null, null);
         	
-        	orTree = orTree.genSolution();
+        	orTree = orTree.genSolutionAsync();
         	
-        	if (orTree.isValid())
+        	System.out.println( "Total execution time: " + Long.toString(endTime - startTime) );
+        	
+        	if( null == orTree )
+        		System.out.println("Or-Tree Timed out");
+        	else if (orTree.isValid())
+        	{
+        		System.out.println("Or-Tree Returned a Valid solution!");
         		F.add(orTree.getAssignments());
+        	}
 		}
 
     	SetSearch setSearch = new SetSearch(department);
-    	setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+    	setSearch.DoTheSearchAlready(F.get(0), F.get(1));*/
     }
     
     public static Department readFile(String fileName) 
