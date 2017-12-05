@@ -10,10 +10,8 @@ import java.nio.file.*;
 public class Main {
     public static void main(String args[]) 
     {
-        String fileName1 = "deptinst1.txt";
-        String fileName2 = "deptinst2.txt";
-//        readFile(fileName1);
-//        readFile(fileName2);
+        String fileName1 = "deptinst3.txt";
+
         DoTest(fileName1);
     }
     
@@ -23,13 +21,20 @@ public class Main {
     	
     	System.out.println("Department: " + department.getDepartmentName());
     	
-    	OTree orTree = new OTree(department, null, null);
+    	ArrayList<Assignments> F = new ArrayList<Assignments>();
     	
-    	System.out.println("Created or tree");
-    	
-    	orTree = orTree.genSolution();
-    	
-    	System.out.println("Valid solution found: " + orTree.isValid());
+    	while (F.size() < 2)
+		{
+        	OTree orTree = new OTree(department, null, null);
+        	
+        	orTree = orTree.genSolution();
+        	
+        	if (orTree.isValid())
+        		F.add(orTree.getAssignments());
+		}
+
+    	SetSearch setSearch = new SetSearch(department);
+    	setSearch.DoTheSearchAlready(F.get(0), F.get(1));
     }
     
     public static Department readFile(String fileName) 
@@ -37,17 +42,6 @@ public class Main {
         String line = null;
         int currentInfo = 0;
 
-        String deptName = "";
-        ArrayList<TimeSlot> courseSlots = new ArrayList<TimeSlot>();
-        ArrayList<TimeSlot> labSlots = new ArrayList<TimeSlot>();
-        ArrayList<Lecture> courses = new ArrayList<Lecture>();
-        ArrayList<Lab> labs = new ArrayList<Lab>();
-        ArrayList<SlotItem[]> notCompatible = new ArrayList<SlotItem[]>();
-        ArrayList<String> unwanted = new ArrayList<String>();
-        ArrayList<String> preferences = new ArrayList<String>();
-        ArrayList<SlotItem[]> pairs = new ArrayList<SlotItem[]>();
-        ArrayList<SlotItem[]> partials = new ArrayList<SlotItem[]>();
-        
         Department department = null;
 
         try 
@@ -62,8 +56,7 @@ public class Main {
 
             while((line = bufferedReader.readLine()) != null) {
                 if (line.equals("Name:")) {
-                    deptName = bufferedReader.readLine();
-                    department = new Department(deptName);
+                    department = new Department(bufferedReader.readLine());
                 }
                 if (line.equals("Course slots:")) {
                     currentInfo = 1;
@@ -114,7 +107,6 @@ public class Main {
                 	int max = Integer.parseInt(split[2].trim());
                 	int min = Integer.parseInt(split[3].trim());
 						
-                    //courseSlots.add(new TimeSlot(day, time, max, min, false));
                     department.addTimeSlot(day, time, max, min, false);
                 }
                 else if (currentInfo == 2) 
@@ -126,7 +118,6 @@ public class Main {
                 	int max = Integer.parseInt(split[2].trim());
                 	int min = Integer.parseInt(split[3].trim());
 						
-                    //labSlots.add(new TimeSlot(day, time, max, min, true));
                     department.addTimeSlot(day, time, max, min, true);
                 } 
                 else if (currentInfo == 3) 
@@ -137,7 +128,6 @@ public class Main {
                 	int courseNum = Integer.parseInt(split[1]);
                 	int lecNum = Integer.parseInt(split[3]);
                 	
-                    //courses.add(new Lecture(courseName, courseNum, lecNum));
                     department.addLecture(courseName, courseNum, lecNum);
                 } 
                 else if (currentInfo == 4) 
@@ -150,7 +140,6 @@ public class Main {
                 	{
                     	int labNum = Integer.parseInt(split[3]);
                     	
-                        //labs.add(new Lab(courseName, courseNum, labNum));
                         department.addLab(courseName, courseNum, labNum);
                 	}
                 	else if (split.length == 6)
@@ -160,22 +149,15 @@ public class Main {
                     	
                     	Lecture parent = null;
                     	
-                    	for (Lecture lecture : courses)
+                    	for (Lecture lecture : department.getAllLectures())
 							if (lecture.courseName == courseName && lecture.courseNum == courseNum && lecture.secNum == secNum)
 								parent = lecture;
-
+                    	
                     	if (parent != null)
-                    	{
                             department.addLab(courseName, courseNum, labNum, parent.secNum);
 
-                    		//labs.add(new Lab(courseName, courseNum, labNum, parent));
-                    	}
                     	else
-                    	{
                             department.addLab(courseName, courseNum, labNum);
-
-                    		//labs.add(new Lab(courseName, courseNum, labNum));
-                    	}
                 	}
                 } 
                 else if (currentInfo == 5) 
@@ -188,9 +170,6 @@ public class Main {
                 	SlotItem course1 = SelectItem(consolidatedList, items[0]);
                 	SlotItem course2 = SelectItem(consolidatedList, items[1]);
                 	
-                	
-                	//notCompatible.add(new SlotItem[] { course1, course2 });
-                	//course1.addIncompatibility(course2);
                 	department.addIncompatible(course1.courseName, course1.courseNum, course1.getClass() == Lab.class, course1.secNum, course2.courseName, course2.courseNum, course2.getClass() == Lab.class, course2.secNum);
                 } 
                 else if (currentInfo == 6) 
@@ -203,8 +182,6 @@ public class Main {
                 	SlotItem course = SelectItem(consolidatedList, items[0]);
                 	
                 	department.addUnwanted(course.courseName, course.courseNum, course.secNum, items[1].trim(), items[2].trim(), course.getClass() == Lab.class);
-                	
-                    //unwanted.add(line);
                 } 
                 else if (currentInfo == 7) 
                 {
@@ -216,8 +193,6 @@ public class Main {
                 	SlotItem course = SelectItem(consolidatedList, items[2]);
                 	                	
                 	department.addPreference(course.courseName, course.courseNum, course.secNum, items[0], items[1].trim(), Integer.parseInt(items[3].trim()), course.getClass() == Lab.class);
-                	
-                    //preferences.add(line);
                 } 
                 else if (currentInfo == 8) 
                 {
@@ -228,26 +203,20 @@ public class Main {
                 	
                 	SlotItem course1 = SelectItem(consolidatedList, items[0]);
                 	SlotItem course2 = SelectItem(consolidatedList, items[1]);
-
-                	//course1.addPair(course2);
-                	//course2.addPair(course1);
                 	
-                	department.addPair(course1.courseName, course1.courseNum, course1.secNum, course1.getClass() == Lab.class, course2.courseName, course2.courseNum, course2.secNum, course2.getClass() == Lab.class);
-                	
-                    //pairs.add(new SlotItem[] { course1, course2 });
+                	department.addPair(course1.courseName, course1.courseNum, course1.secNum, course1.getClass() == Lab.class, course2.courseName, course2.courseNum, course2.secNum, course2.getClass() == Lab.class);                	
                 } 
                 else if (currentInfo == 9) 
                 {
                 	String[] items = line.split(",");
                 	
                 	ArrayList<SlotItem> consolidatedList = new ArrayList<>();
-                	consolidatedList.addAll(courses);
-                	consolidatedList.addAll(labs);
+                	consolidatedList.addAll(department.getAllCourses());
                 	
                 	SlotItem course1 = SelectItem(consolidatedList, items[0]);
                 	SlotItem course2 = SelectItem(consolidatedList, items[1]);
-                	                	
-                    partials.add(new SlotItem[] { course1, course2 });
+                	
+                	// Do the department add partials thing here
                 }
             }
 
@@ -267,14 +236,7 @@ public class Main {
             // ex.printStackTrace();
         }
         
-//        System.out.println("NOT COMPATIBLE COURSES ARE");
-//        for (String course : notCompatible) {
-//            System.out.print(course + ";\n");
-//        }
-//        System.out.println();
-        
         return department;
-//        return new ParsedData(deptName, courseSlots, labSlots, courses, labs, notCompatible, unwanted, preferences, pairs, partials);
     }
     
     public static SlotItem SelectItem(ArrayList<SlotItem> fromList, String dirty)
