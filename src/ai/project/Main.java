@@ -16,7 +16,7 @@ import java.nio.file.*;
 public class Main {
     public static void main(String args[]) 
     {
-        String fileName1 = "deptinst3.txt";
+        String fileName1 = "deptinst1.txt";
 
         DoTest(fileName1);
     }
@@ -43,7 +43,7 @@ public class Main {
     	setSearch.DoTheSearchAlready(F.get(0), F.get(1));
     }
     
-    public static Department readFile(String fileName) 
+    public static Department readFile(String fileName)
     {
         String line = null;
         int currentInfo = 0;

@@ -82,7 +82,7 @@ public class OTree {
 		// Local Variables
 		OTree pReturnTree = null;
 		
-		System.out.println("Num Unassigned? " + m_pUnassignedList.size() );
+		//System.out.println("Num Unassigned? " + m_pUnassignedList.size() );
 		
 		if( m_bInitialized )
 		{
@@ -92,7 +92,7 @@ public class OTree {
 			// Generate Leafs
 			this.altern();
 			
-			System.out.println("Alterned " + m_pLeafs.size() + " Leafs");
+			//System.out.println("Alterned " + m_pLeafs.size() + " Leafs");
 			
 			
 			// No Leafs could be generated? No Valid Solution.
@@ -134,7 +134,7 @@ public class OTree {
 			pNewItem = m_pUnassignedList.remove( m_pRand.nextInt(m_pUnassignedList.size()) );
 			pLeafs = m_pAssigned.assign(m_pTbl, pNewItem);
 			
-			System.out.println( "\tNum Leafs assigned: " + pLeafs.size() );
+			//System.out.println( "\tNum Leafs assigned: " + pLeafs.size() );
 			 
 			// Generate Leafs based on evaluated assignments
 			for( Evaluated pEval : pLeafs )
