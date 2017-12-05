@@ -5,12 +5,6 @@ package ai.project;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
-
-import sun.font.TrueTypeFont;
-
 import java.nio.file.*;
 
 public class Main {

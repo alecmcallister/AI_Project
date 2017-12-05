@@ -1,9 +1,7 @@
 package ai.project;
 
-import java.time.chrono.JapaneseChronology;
 import java.util.*;
 
-import jdk.nashorn.internal.runtime.linker.JavaAdapterFactory;
 
 /*
  * OTree is a recursive tree in that every node of the OTree is, itself, an Or Tree as well.
@@ -49,9 +47,9 @@ public class OTree {
 		// Initialize local timetable		
 		if( ( m_bInitialized = (null != pDept) ) )
 		{	
-			m_pDept = pDept;
-			m_pTbl = pDept.getTimeTable();
-			m_pLeafs = new ArrayDeque<OTree>();
+			m_pDept 	= pDept;
+			m_pTbl 		= pDept.getTimeTable();
+			m_pLeafs 	= new ArrayDeque<OTree>();
 			
 			if( null == m_pRand )
 				m_pRand = new Random( System.currentTimeMillis() );
@@ -61,6 +59,7 @@ public class OTree {
 			{
 				m_pAssigned = new Assignments(new Penalties(0,0,0,0), m_pTbl);		// Fresh Assignments TODO: What should Penalties be set to?
 				m_pUnassignedList = new ArrayList<>( pDept.getAllCourses() ); 		// Fresh List of all Courses and Labs
+				m_eSol = eSolution.UNKNOWN;
 			}
 			else	// Start from given partial solution.
 			{
@@ -82,8 +81,6 @@ public class OTree {
 		// Local Variables
 		OTree pReturnTree = null;
 		
-		//System.out.println("Num Unassigned? " + m_pUnassignedList.size() );
-		
 		if( m_bInitialized )
 		{
 			if( m_eSol == eSolution.YES )
@@ -91,9 +88,6 @@ public class OTree {
 		
 			// Generate Leafs
 			this.altern();
-			
-			//System.out.println("Alterned " + m_pLeafs.size() + " Leafs");
-			
 			
 			// No Leafs could be generated? No Valid Solution.
 			if( m_pLeafs.isEmpty() )
@@ -108,7 +102,7 @@ public class OTree {
 				OTree pNextEval = m_pLeafs.remove();
 				
 				// Recurse
-				pReturnTree = pNextEval.genSolution();
+				pReturnTree = pNextEval.genSolution( );
 			} while( (pReturnTree.m_eSol != eSolution.YES) && !m_pLeafs.isEmpty() );
 		}
 		
