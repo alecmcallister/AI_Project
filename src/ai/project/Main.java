@@ -63,7 +63,6 @@ public class Main {
     public static Department readFile(String fileName) 
     {
         String line = null;
-//        int currentInfo = 0;
         Input currentInfo = Input.UNKNOWN;
 
         Department department = null;
@@ -75,8 +74,7 @@ public class Main {
 
 
             // Always wrap FileReader in BufferedReader.
-            BufferedReader bufferedReader =
-                    new BufferedReader(fileReader);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             while((line = bufferedReader.readLine()) != null) {
                 if (line.equals("Name:")) {
