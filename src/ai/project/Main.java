@@ -7,11 +7,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
 import java.nio.file.*;
 
-public class Main {
-    private enum Input {
+public class Main
+{
+    private enum Input 
+    {
         DEPARTMENT_NAME, // = 0
         COURSE_SLOT, // = 1
         LAB_SLOT, // = 2
@@ -25,14 +26,23 @@ public class Main {
         UNKNOWN; // = 9
     }
     
-    public static void main(String args[]) {
+    public static void main(String args[]) 
+    {
 //        String fileName1 = System.getProperty("user.dir") + "\\deptinst1.txt";
 //        String fileName2 = System.getProperty("user.dir") + "\\deptinst2.txt";
 //        readFile(fileName1);
 //        readFile(fileName2);        
 
-        String fileName1 = System.getProperty("user.dir") + "\\deptinst3.txt";
-//        String fileName1 = System.getProperty("user.dir") + "\\partials.txt";
+//        String fileName1 = System.getProperty("user.dir") + "\\deptinst3.txt";
+    	
+    	String dir = "";
+    	if (System.getProperty("os.name").equals("Mac OS X"))
+    		dir = "/";
+    	
+    	else
+    		dir = "\\";
+    		
+        String fileName1 = System.getProperty("user.dir") + dir + "deptinst3.txt";
 
         DoTest(fileName1);
     }
