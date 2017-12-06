@@ -2,7 +2,6 @@ package ai.project;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.TreeSet;
 
 public class SetSearch
 {
@@ -17,7 +16,7 @@ public class SetSearch
 	}
 	
 	public Assignments DoTheSearchAlready(Assignments a, Assignments b)
-	{
+	{		
 		ArrayList<SlotItem> evolutionList =  new ArrayList<>();
 		evolutionList.addAll(department.getAllCourses());
 		
@@ -31,10 +30,7 @@ public class SetSearch
 			
 			TimeSlot slotA = a.getTimeSlot(randomItem);
 			TimeSlot slotB = b.getTimeSlot(randomItem);
-			
-			//System.out.println("Item selected: " + randomItem.toString() + "\t\tA: " + slotA.toString() + "\t\tB: " + slotB.toString());
-			
-			// Implement Constr* here to chose the timeslot where randomItem goes
+						
 			ArrayList<Evaluated> result = child.assign(department.getTimeTable(), randomItem);
 			
 			boolean assigned = false;
@@ -54,8 +50,6 @@ public class SetSearch
 					break;	
 				}
 			}
-			
-			// If neither parent's slots were in result...
 			if (!assigned)
 			{
 				unassigned.add(randomItem);
@@ -65,9 +59,34 @@ public class SetSearch
 		OTree childTree = new OTree(department, child, unassigned);
 		childTree.genSolution(0);
 		
-		//System.out.println("Child solution found");
+		while (!childTree.isValid())
+		{
+			childTree = new OTree(department, child, unassigned);
+			childTree.genSolution(0);
+		}
 		
 		generated.add(childTree.getAssignments());
+		
+		if (generated.size() < 20)
+		{
+			DoTheSearchAlready((a.getEvalScore() > b.getEvalScore()) ? a : b, childTree.getAssignments());
+		}
+		else
+		{
+			Assignments best = null;
+			
+			for (Assignments generatedSolution : generated)
+			{
+				if (best == null)
+					best = generatedSolution;
+				
+				if (generatedSolution.getEvalScore() < best.getEvalScore())
+					best = generatedSolution;
+			}
+			
+			return best;
+		}
+		
 		return childTree.getAssignments();
 	}
 }
