@@ -32,7 +32,8 @@ public class SetSearch
 			
 			//System.out.println("Item selected: " + randomItem.toString() + "\t\tA: " + slotA.toString() + "\t\tB: " + slotB.toString());
 			
-			TreeSet<Evaluated> result = child.assign(department.getTimeTable(), randomItem);
+			// Implement Constr* here to chose the timeslot where randomItem goes
+			ArrayList<Evaluated> result = child.assign(department.getTimeTable(), randomItem);
 			
 			boolean assigned = false;
 			
@@ -60,7 +61,7 @@ public class SetSearch
 		}
 		
 		OTree childTree = new OTree(department, child, unassigned);
-		childTree.genSolution();
+		childTree.genSolution(0);
 		
 		System.out.println("Child solution found");
 		
