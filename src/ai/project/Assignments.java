@@ -469,20 +469,20 @@ public class Assignments {
         if (numAssigned < timeSlot.getMin()) {
             // Currently below min. Subtract penalty if adding one new item will put us over
             if (numAssigned + 1 >= timeSlot.getMin())
-                val -= item.isLecture() ? penalties.getCourseMin() : penalties.getLabsMin();
+                val -= item.isLecture() ? (penalties.getCourseMin() * penalties.wMinFilled) : (penalties.getLabsMin() * penalties.wMinFilled);
         }
 
         // Check for a change in preferences. The only way the penalty imposed by assignments can go down is if we
         // removed Assignments. Since all we are going to do is add them, not remove them, the penalty can only increase
         // in this step, if it changes at all.
-        evalScore += item.getPreferencesForOtherSlots(timeSlot);
+        evalScore += (item.getPreferencesForOtherSlots(timeSlot) * penalties.wPref);
 
         // Check for a change in pairs.
         if (item.hasPairs()) {
             for (SlotItem paired : item.getPairs()) {
                 UnfilledPairs unfilledPairs = unfilledPairsMap.get(paired);
                 if ((unfilledPairs != null) && (unfilledPairs.expectsPair(item))) {
-                    if (!unfilledPairs.getTimeSlot().equals(timeSlot)) val += penalties.getNotPaired();
+                    if (!unfilledPairs.getTimeSlot().equals(timeSlot)) val += (penalties.getNotPaired() * penalties.wPair);
                 }
             }
         }
@@ -494,7 +494,7 @@ public class Assignments {
                 if (((item.isLecture() && assigned.isLecture())
                         || (!item.isLecture() && !assigned.isLecture()))
                         && item.sameCourse(assigned)) {
-                    val += penalties.getSection();
+                    val += (penalties.getSection() * penalties.wSecDiff);
                 }
             }
         }

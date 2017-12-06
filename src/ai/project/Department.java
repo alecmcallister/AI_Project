@@ -38,7 +38,7 @@ public class Department {
         this.departmentName = departmentName;
         timeTable = new TimeTable();
         courseTable = new CourseTable();
-        penalties = new Penalties(0,0,0,0);
+        penalties = new Penalties(0,0,0,0,0,0,0,0);
     }
 
     /**

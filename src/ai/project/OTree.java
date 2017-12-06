@@ -29,6 +29,8 @@ public class OTree {
 	private boolean 			m_bInitialized;
 	private Random				m_pRand;
 	private final char			MAX_THREADS = 8;
+
+	public static Penalties penalties = new Penalties(1,1,0,5,0,0,0,1);
 	
 	/********************************************************************************\
 	 * Getters/Setters																*
@@ -57,7 +59,7 @@ public class OTree {
 			// Default: start from s0
 			if( null == pAssignedList || null == pUnassignedList )
 			{
-				m_pAssigned = new Assignments(new Penalties(0,0,0,0), m_pTbl);		// Fresh Assignments
+				m_pAssigned = new Assignments(penalties, m_pTbl);		// Fresh Assignments
 				m_pUnassignedList = new ArrayList<>( pDept.getAllCourses() ); 		// Fresh List of all Courses and Labs
 				m_eSol = eSolution.UNKNOWN;
 			}
@@ -90,7 +92,7 @@ public class OTree {
 		// Default: start from s0
 		if( null == pAssignedList || null == pUnassignedList )
 		{
-			m_pAssigned = new Assignments(new Penalties(0,0,0,0), m_pTbl);		// Fresh Assignments
+			m_pAssigned = new Assignments(penalties, m_pTbl);		// Fresh Assignments
 			m_pUnassignedList = new ArrayList<>( pDept.getAllCourses() ); 		// Fresh List of all Courses and Labs
 			m_eSol = eSolution.UNKNOWN;
 		}
@@ -117,7 +119,7 @@ public class OTree {
 		// Default: start from s0
 		if( null == pAssignedList || null == pUnassignedList )
 		{
-			m_pAssigned = new Assignments(new Penalties(0,0,0,0), m_pTbl);		// Fresh Assignments
+			m_pAssigned = new Assignments(penalties, m_pTbl);		// Fresh Assignments
 			m_pUnassignedList = new ArrayList<>( m_pDept.getAllCourses() ); 		// Fresh List of all Courses and Labs
 			m_eSol = eSolution.UNKNOWN;
 		}
@@ -136,7 +138,7 @@ public class OTree {
 	{
 		m_pLeafs.clear();
 		m_pRand = new Random( System.currentTimeMillis() );
-		m_pAssigned = new Assignments(new Penalties(0,0,0,0), m_pTbl);		// Fresh Assignments
+		m_pAssigned = new Assignments(penalties, m_pTbl);		// Fresh Assignments
 		m_pUnassignedList = new ArrayList<>( m_pDept.getAllCourses() ); 	// Fresh List of all Courses and Labs
 		m_eSol = eSolution.UNKNOWN;
 	}

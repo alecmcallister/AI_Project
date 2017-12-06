@@ -21,7 +21,7 @@ public class SetSearch
 		
 		ArrayList<SlotItem> unassigned = new ArrayList<>();
 		
-		Assignments child = new Assignments(new Penalties(0, 0, 0, 0), department.getTimeTable());
+		Assignments child = new Assignments(OTree.penalties, department.getTimeTable());
 		
 		while (!evolutionList.isEmpty())
 		{

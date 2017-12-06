@@ -32,6 +32,9 @@ public class Main {
     	System.out.println("Total execution time: " + Long.toString(endTime - startTime) );
     	System.out.println("Result:\n" + orTree.getAssignments().toString() );
 	System.out.println("isvalid = " + orTree.isValid());
+	if (orTree.isValid()) {
+		System.out.println("Eval = " + orTree.getAssignments().getEvalScore());
+	}
     	return;
     	
     	/*
