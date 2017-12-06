@@ -1,5 +1,6 @@
 package ai.project;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -114,8 +115,8 @@ public class Assignments {
      *                  is not aware of any TimeSlots that it doesn't yet assign anything to.
      * @param slotItem The SlotItem we want to assign.
      */
-    public TreeSet<Evaluated> assign(TimeTable timeTable, SlotItem slotItem) {
-        TreeSet<Evaluated> rv = new TreeSet<>(new EvalCompare());
+    public ArrayList<Evaluated> assign(TimeTable timeTable, SlotItem slotItem) {
+        ArrayList<Evaluated> rv = new ArrayList<>();
 
         // Save a bit of processing by only looking at slots that match the type of slotItem
         ArrayList<TimeSlot> slots = slotItem.isLecture() ? timeTable.getAllLectureSlots() : timeTable.getAllLabSlots();
@@ -123,6 +124,9 @@ public class Assignments {
         for (TimeSlot slot : slots) {
             if (constr(slot, slotItem)) rv.add(eval(slot, slotItem));
         }
+
+        // Randomize ordering
+        Collections.shuffle(rv);
 
         return rv;
     }
@@ -533,24 +537,25 @@ public class Assignments {
             return expectedPairs.contains(other);
         }
     }
-    
+        
     public String toString() 
     {
+    	//System.out.print("\b");
     	String result = "";
-
-    	int count = 0;
-    	
-    	for (int i = 0; i < 5; i++)
-		{
-			String day = (i == 0) ? "Mon" : (i == 1) ? "Tue" : (i == 2) ? "Wed" : (i == 3) ? "Thu" : "Fri";
-		}
     	
     	for (TimeSlot timeSlot : TimeTable.slots)
 		{
-    		String day = (timeSlot.getTimePair().getType() == SlotType.MWF_LEC) ? "Mon" : "";
-			result += timeSlot.toString() + "\n";
+ 			result += timeSlot.toString() + "\t";
+			
+			if (assignments.containsKey(timeSlot))
+			{
+				for (SlotItem item : assignments.get(timeSlot))
+				{
+					result += item.toString() + "\t";
+				}
+			}
+			result += "\n";
 		}
-    	
     	
     	return result;
     }
