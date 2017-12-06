@@ -9,6 +9,8 @@ public class SetSearch
 	ArrayList<Assignments> F;
 	Department department;
 	
+	public static ArrayList<Assignments> generated = new ArrayList<>();
+	
 	public SetSearch(Department department)
 	{
 		this.department = department;
@@ -65,6 +67,7 @@ public class SetSearch
 		
 		//System.out.println("Child solution found");
 		
+		generated.add(childTree.getAssignments());
 		return childTree.getAssignments();
 	}
 }

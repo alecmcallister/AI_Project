@@ -46,11 +46,11 @@ public class Main
     	    	
     	ArrayList<Assignments> F = new ArrayList<Assignments>();
     	
-    	while (F.size() < 1)
+    	while (F.size() < 2)
 		{
         	OTree orTree = new OTree(department, null, null);
         	
-        	orTree = orTree.genSolution();
+        	orTree = orTree.genSolution(0);
         	
         	if (orTree.isValid())
         	{
@@ -59,10 +59,10 @@ public class Main
         	}
 		}
 
-//    	SetSearch setSearch = new SetSearch(department);
-//    	Assignments child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
-//    	
-    	//System.out.println(child.toString());
+    	SetSearch setSearch = new SetSearch(department);
+    	Assignments child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+    	
+    	System.out.println(child.toString());
     }
     
     public static Department readFile(String fileName) 
@@ -250,14 +250,18 @@ public class Main
                     int courseNum = Integer.parseInt(slotData[1]);
                     int secNum = Integer.parseInt(slotData[slotData.length - 1]);
 
-//                    ArrayList<SlotItem> consolidatedList = new ArrayList<>();
-//                    consolidatedList.addAll(department.getAllCourses());
-
-//                    SlotItem course1 = SelectItem(consolidatedList, items[0]);
-//                    SlotItem course2 = SelectItem(consolidatedList, items[1]);
-
                     // Do the department add partials thing here
-                    department.addPartial(courseName, courseNum, secNum, isLab, day, time);
+                    if (isLab)
+                    {
+                    	if (slotData.length != 4)
+                    		department.addPartialLab(courseName, courseNum, Integer.parseInt(slotData[3]), secNum, day, time);
+                    	else
+                    		department.addPartialLab(courseName, courseNum, secNum, day, time);
+                    }
+                    	else 
+                    	department.addPartialLecture(courseName, courseNum, secNum, day, time);
+
+					
                 }
             }
 
@@ -270,7 +274,7 @@ public class Main
             System.out.println("Error reading file '" + fileName + "'");
         }
         
-        System.out.println("Reading file completed...");
+        //System.out.println("Reading file completed...");
         return department;
     }
     

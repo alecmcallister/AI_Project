@@ -248,7 +248,7 @@ public class OTree {
 				m_eSol = eSolution.NO;
 		}
 		
-		System.out.println(this.getAssignments().toString());
+		//System.out.println(this.getAssignments().toString());
 
 		// Return Result.
 		return pReturnTree;
