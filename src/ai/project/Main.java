@@ -28,14 +28,7 @@ public class Main
     
     public static void main(String args[]) 
     {
-    	String dir = "";
-    	if (System.getProperty("os.name").equals("Mac OS X"))
-    		dir = "/";
-    	
-    	else
-    		dir = "\\";
-    		
-        String fileName1 = System.getProperty("user.dir") + dir + "deptinst3.txt";
+        String fileName1 = args[0];
 
         DoTest(fileName1);
     }
@@ -45,16 +38,19 @@ public class Main
     	Department department = readFile(fileName);  
     	    	
     	ArrayList<Assignments> F = new ArrayList<Assignments>();
+
+    	OTree orTree = new OTree(department, null, null);
     	
+		orTree = orTree.genSolution(0);
+
     	while (F.size() < 2)
 		{
-        	OTree orTree = new OTree(department, null, null);
+        	orTree = new OTree(department, null, null);
         	
         	orTree = orTree.genSolution(0);
         	
         	if (orTree.isValid())
         	{
-        		System.out.println("Solution found...");
         		F.add(orTree.getAssignments());
         	}
 		}
@@ -62,7 +58,7 @@ public class Main
     	SetSearch setSearch = new SetSearch(department);
     	Assignments child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
     	
-    	System.out.println(child.toString());
+    	System.out.println(child.getEvalScore());
     }
     
     public static Department readFile(String fileName) 
