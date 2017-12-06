@@ -1,5 +1,6 @@
 package ai.project;
 
+import java.io.Console;
 import java.util.*;
 
 
@@ -70,8 +71,6 @@ public class OTree {
 		}
 	}
 	
-	int count = 0;
-	
 	/**
 	 * Executes the Or-Tree functionality on its current assignment. Evaluates Depthfirst running altern to generate leafs.
 	 * leafs are only generated if something can be successfully assigned to a timeslot. If nothing can be assigned, then leaf evaluates to no and returns.
@@ -81,12 +80,6 @@ public class OTree {
 	 */
 	public OTree genSolution()
 	{		
-		for (int i = 0; i < 3; i++)
-			System.out.printf("%s", ( ( i > (count) ? " " : ".") ));
-		
-		System.out.printf("\r");
-		count = (count > 3) ? 0 : count + 1;
-
 		// Local Variables
 		OTree pReturnTree = null;
 		
@@ -111,8 +104,9 @@ public class OTree {
 				OTree pNextEval = m_pLeafs.remove();
 				
 				// Recurse
-				pReturnTree = pNextEval.genSolution( );
-			} while( (pReturnTree.m_eSol != eSolution.YES) && !m_pLeafs.isEmpty() );
+				pReturnTree = pNextEval.genSolution();
+			} 
+			while((pReturnTree.m_eSol != eSolution.YES) && !m_pLeafs.isEmpty());
 		}
 		
 		// Return Result.

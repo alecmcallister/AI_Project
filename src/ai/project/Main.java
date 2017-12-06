@@ -28,13 +28,6 @@ public class Main
     
     public static void main(String args[]) 
     {
-//        String fileName1 = System.getProperty("user.dir") + "\\deptinst1.txt";
-//        String fileName2 = System.getProperty("user.dir") + "\\deptinst2.txt";
-//        readFile(fileName1);
-//        readFile(fileName2);        
-
-//        String fileName1 = System.getProperty("user.dir") + "\\deptinst3.txt";
-    	
     	String dir = "";
     	if (System.getProperty("os.name").equals("Mac OS X"))
     		dir = "/";
@@ -42,14 +35,13 @@ public class Main
     	else
     		dir = "\\";
     		
-        String fileName1 = System.getProperty("user.dir") + dir + "deptinst1.txt";
+        String fileName1 = System.getProperty("user.dir") + dir + "deptinst3.txt";
 
         DoTest(fileName1);
     }
     
     public static void DoTest(String fileName) 
     {
-//    	ParsedData data = readFile(fileName);
     	Department department = readFile(fileName);  
     	
     	System.out.println("Department: " + department.getDepartmentName());
@@ -63,17 +55,21 @@ public class Main
         	orTree = orTree.genSolution();
         	
         	if (orTree.isValid())
+        	{
+        		System.out.println("Solution found...");
         		F.add(orTree.getAssignments());
+        	}
 		}
 
     	SetSearch setSearch = new SetSearch(department);
-    	setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+    	Assignments child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+    	
+    	System.out.println(child.toString());
     }
     
     public static Department readFile(String fileName) 
     {
         String line = null;
-//        int currentInfo = 0;
         Input currentInfo = Input.UNKNOWN;
 
         Department department = null;

@@ -533,4 +533,47 @@ public class Assignments {
             return expectedPairs.contains(other);
         }
     }
+    
+    public String toString() 
+    {
+    	String result = "";
+
+    	int count = 0;
+    	
+    	for (int i = 0; i < 5; i++)
+		{
+			String day = (i == 0) ? "Mon" : (i == 1) ? "Tue" : (i == 2) ? "Wed" : (i == 3) ? "Thu" : "Fri";
+		}
+    	
+    	for (TimeSlot timeSlot : TimeTable.slots)
+		{
+    		String day = (timeSlot.getTimePair().getType() == SlotType.MWF_LEC) ? "Mon" : "";
+			result += timeSlot.toString() + "\n";
+		}
+    	
+    	
+    	return result;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

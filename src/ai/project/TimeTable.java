@@ -22,6 +22,8 @@ public class TimeTable {
     private HashMap<TimePair, TimeSlot> labSlots;
     private int totalLecturesWithMinimum;
     private int totalLabsWithMinimum;
+    
+    public static ArrayList<TimeSlot> slots = new ArrayList<>(); 
 
     public TimeTable() {
         lecSlots = new HashMap<>();
@@ -36,7 +38,8 @@ public class TimeTable {
      *
      * @param slot The new TimeSlot to be inserted into the table.
      */
-    public void updateTable(TimeSlot slot) {
+    public void updateTable(TimeSlot slot) 
+    {
         if (slot.isLectureSlot()) {
             TimeSlot oldSlot = lecSlots.get(slot);
             if (oldSlot != null) {
@@ -45,6 +48,7 @@ public class TimeTable {
             }
             else {
                 lecSlots.put(slot.getTimePair(), slot);
+                slots.add(slot);
             }
             if (slot.getMin() > 0) totalLecturesWithMinimum++;
         }
@@ -56,6 +60,7 @@ public class TimeTable {
             }
             else {
                 labSlots.put(slot.getTimePair(), slot);
+                slots.add(slot);
             }
             if (slot.getMin() > 0) totalLabsWithMinimum++;
         }
