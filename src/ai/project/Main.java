@@ -33,7 +33,7 @@ public class Main
         if (args.length > 0)
             fileName1 = args[0];
         else
-            fileName1 = System.getProperty("user.dir") + "\\gehtnicht6.txt";
+            fileName1 = System.getProperty("user.dir") + "\\gehtnicht5.txt";
 
         DoTest(fileName1);
     }
@@ -60,10 +60,12 @@ public class Main
         	}
 		}
 
-    	SetSearch setSearch = new SetSearch(department);
-    	Assignments child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+        System.out.println(orTree.isValid());
+
+//    	SetSearch setSearch = new SetSearch(department);
+//    	Assignments child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
     	
-    	System.out.println(child.getEvalScore());
+//    	System.out.println(child.getEvalScore());
     }
     
     public static Department readFile(String fileName) 
