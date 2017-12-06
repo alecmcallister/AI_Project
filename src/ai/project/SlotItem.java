@@ -69,7 +69,6 @@ public abstract class SlotItem {
      * @param other The SlotItem that this SlotItem is to be considered incompatible with.
      */
     public void addIncompatibility(SlotItem other) {
-    	System.out.println("Adding incompatibility between " + this + " and "  + other);
         if (!this.equals(other)) {
             incompatible.add(other);
             if (!other.incompatibleWith(this))

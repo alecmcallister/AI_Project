@@ -33,7 +33,7 @@ public class Main
         if (args.length > 0)
             fileName1 = args[0];
         else
-            fileName1 = System.getProperty("user.dir") + "\\gehtnicht5.txt";
+            fileName1 = System.getProperty("user.dir") + "\\gehtnicht10.txt";
 
         DoTest(fileName1);
     }
@@ -48,8 +48,7 @@ public class Main
     	
 		orTree = orTree.genSolution(0);
 
-    	while (F.size() < 2)
-		{
+    	while (F.size() < 2)	{
         	orTree = new OTree(department, null, null);
         	
         	orTree = orTree.genSolution(0);
@@ -58,14 +57,30 @@ public class Main
         	{
         		F.add(orTree.getAssignments());
         	}
+		else {
+			System.out.println("No solution found");
+			return;
 		}
+	}
 
-        System.out.println(orTree.isValid());
+    	SetSearch setSearch = new SetSearch(department);
+    	OTree child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+        OTree best = null;
 
-//    	SetSearch setSearch = new SetSearch(department);
-//    	Assignments child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
-    	
-//    	System.out.println(child.getEvalScore());
+        for (int i = 0; i < 20; i++) {
+            OTree temp = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+            if (best == null)
+                best = temp;
+            else if (temp.getAssignments().getEvalScore() < best.getAssignments().getEvalScore())
+                best = temp;
+        }
+        if (best != null && best.isValid()) {
+                System.out.println("Eval = " + best.getAssignments().getEvalScore());
+        }
+        else {
+            System.out.println("Invalid");
+        }
+	
     }
     
     public static Department readFile(String fileName) 
