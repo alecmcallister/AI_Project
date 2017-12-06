@@ -30,7 +30,7 @@ public class OTree {
 	private Random				m_pRand;
 	private final char			MAX_THREADS = 8;
 
-	public static Penalties penalties = new Penalties(1,1,0,5,0,0,0,1);
+	public static Penalties penalties = new Penalties(100,100,0,100,0,1,0,0);
 	
 	/********************************************************************************\
 	 * Getters/Setters																*

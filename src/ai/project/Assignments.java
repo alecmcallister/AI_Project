@@ -38,8 +38,8 @@ public class Assignments {
     public Assignments(Penalties penalties, TimeTable table) {
         assignments = new HashMap<>();
         this.penalties = penalties;
-        evalScore = (table.getTotalLabsWithMinimum() * penalties.getLabsMin())
-                    + (table.getTotalLecturesWithMinimum() * penalties.getCourseMin());
+        evalScore = (table.getTotalLabsWithMinimum() * penalties.getLabsMin() * penalties.wMinFilled)
+                    + (table.getTotalLecturesWithMinimum() * penalties.getCourseMin() * penalties.wMinFilled);
         unfilledPairsMap = new HashMap<>();
     }
 
