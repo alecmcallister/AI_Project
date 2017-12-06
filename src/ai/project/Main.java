@@ -10,7 +10,12 @@ import java.nio.file.*;
 public class Main {
     public static void main(String args[]) 
     {
-        String fileName1 = args[0];
+        String fileName1 = "";
+        
+        if (args.length > 0)
+            fileName1 = args[0];
+        else
+            fileName1 = System.getProperty("user.dir") + "\\gehtnicht6.txt";
 
         DoTest(fileName1);
     }
@@ -63,14 +68,14 @@ public class Main {
     {
         String line = null;
         int currentInfo = 0;
-
+        System.out.println("READING IN FILE");
         Department department = null;
 
         try 
         {
             // FileReader reads text files in the default encoding.
             FileReader fileReader =
-                    new FileReader(Paths.get("").toAbsolutePath().toString() + "/" + fileName);
+                    new FileReader(fileName);
 
             // Always wrap FileReader in BufferedReader.
             BufferedReader bufferedReader =
@@ -78,7 +83,9 @@ public class Main {
 
             while((line = bufferedReader.readLine()) != null) {
                 if (line.equals("Name:")) {
-                    department = new Department(bufferedReader.readLine());
+                    line = bufferedReader.readLine();
+                    System.out.println("NAME IS: " + line);
+                    department = new Department(line);
                 }
                 if (line.equals("Course slots:")) {
                     currentInfo = 1;
@@ -230,13 +237,26 @@ public class Main {
                 } 
                 else if (currentInfo == 9) 
                 {
-                	String[] items = line.split(",");
-                	
-                	ArrayList<SlotItem> consolidatedList = new ArrayList<>();
-                	consolidatedList.addAll(department.getAllCourses());
-                	
-                	SlotItem course1 = SelectItem(consolidatedList, items[0]);
-                	SlotItem course2 = SelectItem(consolidatedList, items[1]);
+                	 // input probably like:
+                    // day, time, courseName+lecture/tut
+                    // Ex. MO, 8:00, CPSC 203 LEC 01
+                    // Ex. MO, 17:00, CPSC 203 LEC 95 TUT 96
+                    // CPSC 433 LEC 01, MO, 8:00
+                    String[] items = line.split(",");
+                    String[] slotData = items[0].trim().split(" ");
+                    
+                    String day = items[1];
+                    String time = items[2];
+                    boolean isLab = items[0].contains("TUT") || items[2].contains("LAB");
+                    String courseName = slotData[0];
+                    int courseNum = Integer.parseInt(slotData[1]);
+                    int secNum = Integer.parseInt(slotData[slotData.length - 1]);
+
+//                    department.addPartial(courseName, courseNum, secNum, isLab, day, time);
+                    if (isLab)
+                        department.addPartialLab(courseName, courseNum, secNum, day, time);
+                    else
+                        department.addPartialLecture(courseName, courseNum, secNum, day, time);
                 	
                 	// Do the department add partials thing here
                 }
