@@ -1,0 +1,6 @@
+pencoursemin = labsmin = 1
+section = 5
+wminfilled and wpref = 0
+wsecdiff = 1
+
+best eval = 5
