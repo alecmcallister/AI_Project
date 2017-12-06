@@ -43,12 +43,10 @@ public class Main
     public static void DoTest(String fileName) 
     {
     	Department department = readFile(fileName);  
-    	
-    	System.out.println("Department: " + department.getDepartmentName());
-    	
+    	    	
     	ArrayList<Assignments> F = new ArrayList<Assignments>();
     	
-    	while (F.size() < 2)
+    	while (F.size() < 1)
 		{
         	OTree orTree = new OTree(department, null, null);
         	
@@ -61,10 +59,10 @@ public class Main
         	}
 		}
 
-    	SetSearch setSearch = new SetSearch(department);
-    	Assignments child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
-    	
-    	System.out.println(child.toString());
+//    	SetSearch setSearch = new SetSearch(department);
+//    	Assignments child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+//    	
+    	//System.out.println(child.toString());
     }
     
     public static Department readFile(String fileName) 

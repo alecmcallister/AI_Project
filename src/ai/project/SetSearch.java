@@ -62,7 +62,7 @@ public class SetSearch
 		OTree childTree = new OTree(department, child, unassigned);
 		childTree.genSolution();
 		
-		System.out.println("Child solution found");
+		//System.out.println("Child solution found");
 		
 		return childTree.getAssignments();
 	}
