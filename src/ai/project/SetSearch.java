@@ -33,7 +33,7 @@ public class SetSearch
 			//System.out.println("Item selected: " + randomItem.toString() + "\t\tA: " + slotA.toString() + "\t\tB: " + slotB.toString());
 			
 			// Implement Constr* here to chose the timeslot where randomItem goes
-			TreeSet<Evaluated> result = child.assign(department.getTimeTable(), randomItem);
+			ArrayList<Evaluated> result = child.assign(department.getTimeTable(), randomItem);
 			
 			boolean assigned = false;
 			
