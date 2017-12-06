@@ -323,11 +323,14 @@ public class Assignments {
      */
     private boolean isFullyCompatible(TimeSlot timeSlot, SlotItem item) {
         HashSet<SlotItem> others = getAssignment(timeSlot);
-        if (others == null) return true;
-
+        if (others == null) {
+		return true;
+	}
         for (SlotItem other : others) {
-            if (item.incompatibleWith(other))
+            if (item.incompatibleWith(other)) {
+	    	System.out.println("found incompat: " + item + " with " + other);
                 return false;
+		}
         }
 
         return true;

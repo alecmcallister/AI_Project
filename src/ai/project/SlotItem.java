@@ -69,6 +69,7 @@ public abstract class SlotItem {
      * @param other The SlotItem that this SlotItem is to be considered incompatible with.
      */
     public void addIncompatibility(SlotItem other) {
+    	System.out.println("Adding incompatibility between " + this + " and "  + other);
         if (!this.equals(other)) {
             incompatible.add(other);
             if (!other.incompatibleWith(this))
@@ -205,6 +206,14 @@ public abstract class SlotItem {
 
     public String getCourseString() {
         return courseName + " " + courseNum;
+    }
+
+    @Override
+    public int hashCode() {
+	int rv = courseNum * 10000;
+	rv += secNum * 100;
+	rv += courseName.hashCode();
+	return rv;
     }
 
 }
