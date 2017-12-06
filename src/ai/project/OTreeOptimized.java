@@ -97,12 +97,12 @@ public class OTreeOptimized {
             // need temp to reverse it in output
             for (Evaluated timeSlot : evaluatedTimeSlots) {
                 assignments.addAssignment(timeSlot.getTimeSlot(), toAssign);
-                tempProbSet.push(new Prob(assignments, unassigned));
+                tempProbSet.add(new Prob(assignments, unassigned));
             }
-
-            // reverse tempProbSet and store into newProbSet for correct output order
-            while (!tempProbSet.isEmpty()) {
-                newProbSet.push(tempProbSet.pop());
+            
+            // need to reverse the stack
+            for (Prob p : tempProbSet) {
+                newProbSet.push(p);
             }
 
             return newProbSet;
