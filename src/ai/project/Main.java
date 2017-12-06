@@ -26,11 +26,11 @@ public class Main {
     	OTree orTree = new OTree(department, null, null);
     	
     	final long startTime = System.currentTimeMillis();
-		orTree = orTree.genSolutionAsync( );
+		orTree = orTree.genSolution(0);
     	final long endTime = System.currentTimeMillis();
     	
     	System.out.println("Total execution time: " + Long.toString(endTime - startTime) );
-    	System.out.println("Result: " + orTree.isValid() );
+    	System.out.println("Result:\n" + orTree.getAssignments().toString() );
     	return;
     	
     	/*

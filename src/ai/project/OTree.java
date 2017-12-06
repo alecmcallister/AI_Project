@@ -28,7 +28,7 @@ public class OTree {
 	private eSolution 			m_eSol;
 	private boolean 			m_bInitialized;
 	private Random				m_pRand;
-	private final char			MAX_THREADS = 4;
+	private final char			MAX_THREADS = 8;
 	
 	/********************************************************************************\
 	 * Getters/Setters																*
