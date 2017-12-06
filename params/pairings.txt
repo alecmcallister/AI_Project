@@ -1,0 +1,5 @@
+not paired = 11
+wminfilled = wsecdiff = wpref = 0
+wpair = 1
+
+best eval = 55
