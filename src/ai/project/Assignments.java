@@ -328,7 +328,6 @@ public class Assignments {
 	}
         for (SlotItem other : others) {
             if (item.incompatibleWith(other)) {
-	    	System.out.println("found incompat: " + item + " with " + other);
                 return false;
 		}
         }

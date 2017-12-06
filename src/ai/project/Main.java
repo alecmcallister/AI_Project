@@ -43,8 +43,7 @@ public class Main
     	
 		orTree = orTree.genSolution(0);
 
-    	while (F.size() < 2)
-		{
+    	while (F.size() < 2)	{
         	orTree = new OTree(department, null, null);
         	
         	orTree = orTree.genSolution(0);
@@ -53,12 +52,16 @@ public class Main
         	{
         		F.add(orTree.getAssignments());
         	}
+		else {
+			System.out.println("No solution found");
+			return;
 		}
+	}
 
     	SetSearch setSearch = new SetSearch(department);
     	Assignments child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
     	
-    	System.out.println(child.getEvalScore());
+    	System.out.println("Eval = " + child.getEvalScore());
     }
     
     public static Department readFile(String fileName) 
