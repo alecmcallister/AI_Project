@@ -59,9 +59,23 @@ public class Main
 	}
 
     	SetSearch setSearch = new SetSearch(department);
-    	Assignments child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
-    	
-    	System.out.println("Eval = " + child.getEvalScore());
+    	OTree child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+	OTree best = null;
+
+	for (int i = 0; i < 20; i++) {
+		OTree temp = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+		if (best == null)
+			best = temp;
+		else if (temp.getAssignments().getEvalScore() < best.getAssignments().getEvalScore())
+			best = temp;
+	}
+	if (best != null && best.isValid()) {
+    		System.out.println("Eval = " + best.getAssignments().getEvalScore());
+	}
+	else {
+		System.out.println("Invalid");
+	}
+	
     }
     
     public static Department readFile(String fileName) 

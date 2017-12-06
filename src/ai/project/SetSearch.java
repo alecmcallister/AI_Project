@@ -8,14 +8,14 @@ public class SetSearch
 	ArrayList<Assignments> F;
 	Department department;
 	
-	public static ArrayList<Assignments> generated = new ArrayList<>();
+	public static ArrayList<OTree> generated = new ArrayList<>();
 	
 	public SetSearch(Department department)
 	{
 		this.department = department;
 	}
 	
-	public Assignments DoTheSearchAlready(Assignments a, Assignments b)
+	public OTree DoTheSearchAlready(Assignments a, Assignments b)
 	{		
 		ArrayList<SlotItem> evolutionList =  new ArrayList<>();
 		evolutionList.addAll(department.getAllCourses());
@@ -59,35 +59,10 @@ public class SetSearch
 		OTree childTree = new OTree(department, child, unassigned);
 		childTree.genSolution(0);
 		
-		while (!childTree.isValid())
-		{
-			childTree = new OTree(department, child, unassigned);
-			childTree.genSolution(0);
-		}
 		
-		generated.add(childTree.getAssignments());
-		
-		if (generated.size() < 20)
-		{
-			DoTheSearchAlready((a.getEvalScore() > b.getEvalScore()) ? a : b, childTree.getAssignments());
-		}
-		else
-		{
-			Assignments best = null;
+		generated.add(childTree);
 			
-			for (Assignments generatedSolution : generated)
-			{
-				if (best == null)
-					best = generatedSolution;
-				
-				if (generatedSolution.getEvalScore() < best.getEvalScore())
-					best = generatedSolution;
-			}
-			
-			return best;
-		}
-		
-		return childTree.getAssignments();
+		return childTree;
 	}
 }
 
