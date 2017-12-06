@@ -220,12 +220,13 @@ public class OTree {
 			this.altern();
 			
 			// DEBUG Output
-			for( int i = 0; i < m_pUnassignedList.size(); ++i )
-				System.out.print( "~");
-			System.out.println("Thread #:" + iID + " - Num Leafs=" + m_pLeafs.size() + "; Unassigned=" + m_pUnassignedList.size() );
+//			for( int i = 0; i < m_pUnassignedList.size(); ++i )
+//				System.out.print( "~");
+//			System.out.println("Thread #:" + iID + " - Num Leafs=" + m_pLeafs.size() + "; Unassigned=" + m_pUnassignedList.size() );
+//			
 			
-			if( m_pUnassignedList.isEmpty() )
-				System.out.println( "SAFE!");
+//			if( m_pUnassignedList.isEmpty() )
+//				System.out.println( "SAFE!");
 			
 			// No Leafs could be generated? No Valid Solution.
 			if( m_pLeafs.isEmpty() )
@@ -247,6 +248,8 @@ public class OTree {
 				m_eSol = eSolution.NO;
 		}
 		
+		System.out.println(this.getAssignments().toString());
+
 		// Return Result.
 		return pReturnTree;
 	}

@@ -10,7 +10,7 @@ import java.nio.file.*;
 public class Main {
     public static void main(String args[]) 
     {
-        String fileName1 = "deptinst2.txt";
+        String fileName1 = "deptinst1.txt";
 
         DoTest(fileName1);
     }
@@ -26,10 +26,10 @@ public class Main {
     	OTree orTree = new OTree(department, null, null);
     	
     	final long startTime = System.currentTimeMillis();
-		orTree = orTree.genSolution( 0 );
+		orTree = orTree.genSolutionAsync( );
     	final long endTime = System.currentTimeMillis();
     	
-    	System.out.println( "Total execution time: " + Long.toString(endTime - startTime) );
+    	System.out.println("Total execution time: " + Long.toString(endTime - startTime) );
     	System.out.println("Result: " + orTree.isValid() );
     	return;
     	
