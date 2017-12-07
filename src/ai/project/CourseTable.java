@@ -71,7 +71,7 @@ public class CourseTable {
     public void addLab(String courseName, int courseNum, int labNum) {
         Lab newLab = new Lab(courseName, courseNum, labNum);
         LectureLabPair pair = getPair(courseName, courseNum);
-        pair.labs.put(labNum, newLab);
+        pair.labs.put(new LabSecPair(newLab), newLab);
     }
 
     /**
@@ -91,7 +91,7 @@ public class CourseTable {
         if (parent != null) {
             Lab newLab = new Lab(courseName, courseNum, labNum, parent);
             LectureLabPair pair = getPair(courseName, courseNum);
-            pair.labs.put(labNum, newLab);
+            pair.labs.put(new LabSecPair(newLab), newLab);
         }
     }
 
@@ -291,7 +291,7 @@ public class CourseTable {
     }
 
     /**
-     * Gets a Lab from the CourseTable.
+     * Gets a Lab with *no* parent from the CourseTable.
      * May return null if the Lab is not in the table.
      *
      * @param courseName The name of the course (e.g. CPSC, SENG).
@@ -300,7 +300,21 @@ public class CourseTable {
      * @return A reference to the Lab in the table, or null if nothing in the table matches the params.
      */
     public Lab getLab(String courseName, int courseNum, int labNum) {
-        return getPair(courseName, courseNum).labs.get(labNum);
+        return getPair(courseName, courseNum).labs.get(new LabSecPair(labNum));
+    }
+
+    /**
+     * Gets a Lab with a parent from the CourseTable.
+     * May return null if the Lab is not in the table.
+     *
+     * @param courseName The name of the course (e.g. CPSC, SENG).
+     * @param courseNum The number of the course (e.g. 203, 433).
+     * @param lecNum The section number (lec #) for the parent lecture of this lab.
+     * @param labNum The section number (tut #) for the lab.
+     * @return A reference to the Lab in the table, or null if nothing in the table matches the params.
+     */
+    public Lab getLab(String courseName, int courseNum, int lecNum, int labNum) {
+        return getPair(courseName, courseNum).labs.get(new LabSecPair(lecNum, labNum));
     }
 
     /**
@@ -408,6 +422,58 @@ public class CourseTable {
      */
     private class LectureLabPair {
         private HashMap<Integer, Lecture> lectures = new HashMap<>();
-        private HashMap<Integer, Lab> labs = new HashMap<>();
+        private HashMap<LabSecPair, Lab> labs = new HashMap<>();
+    }
+
+    /**
+     * Another struct-like class which pairs a Lab's section number and parent lecture section number.
+     * The purpose of this is to permit labs that have the same section number but different parents.
+     */
+    private class LabSecPair {
+        public int lecNum;
+        public int labNum;
+
+        LabSecPair(int lecNum, int labNum) {
+            this.lecNum = lecNum;
+            this.labNum = labNum;
+        }
+
+        LabSecPair(int labNum) {
+            this.labNum = labNum;
+            lecNum = 0;
+        }
+
+        LabSecPair(Lab lab) {
+            this.labNum = lab.getLabNum();
+            if (lab.hasParent())
+                lecNum = lab.getParent().getLecNum();
+            else
+                lecNum = 0;
+
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            // Self comparison
+            if (this == other) return true;
+
+            // Other LabSecPair comparison. Check if both slots are the same.
+            if (other instanceof LabSecPair) {
+                return ((this.lecNum == ((LabSecPair) other).lecNum)
+                        && (this.labNum == ((LabSecPair) other).labNum));
+            }
+
+            // Other is not a LabSecPair
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            // Dead simple hashCode() implementation. Just smashes the two numbers together.
+            // Works under the assumption that all section numbers will be two digits.
+            int result = lecNum * 1000;
+            result += labNum;
+            return result;
+        }
     }
 }

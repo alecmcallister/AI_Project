@@ -1,5 +1,6 @@
 package ai.project;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -37,8 +38,8 @@ public class Assignments {
     public Assignments(Penalties penalties, TimeTable table) {
         assignments = new HashMap<>();
         this.penalties = penalties;
-        evalScore = (table.getTotalLabsWithMinimum() * penalties.getLabsMin())
-                    + (table.getTotalLecturesWithMinimum() * penalties.getCourseMin());
+        evalScore = (table.getTotalLabsWithMinimum() * penalties.getLabsMin() * penalties.wMinFilled)
+                    + (table.getTotalLecturesWithMinimum() * penalties.getCourseMin() * penalties.wMinFilled);
         unfilledPairsMap = new HashMap<>();
     }
 
@@ -114,8 +115,10 @@ public class Assignments {
      *                  is not aware of any TimeSlots that it doesn't yet assign anything to.
      * @param slotItem The SlotItem we want to assign.
      */
-    public TreeSet<Evaluated> getViableTimeSlots(TimeTable timeTable, SlotItem slotItem) {
-        TreeSet<Evaluated> rv = new TreeSet<>(new EvalCompare());
+//    public TreeSet<Evaluated> getViableTimeSlots(TimeTable timeTable, SlotItem slotItem) {
+//        TreeSet<Evaluated> rv = new TreeSet<>(new EvalCompare());
+    public ArrayList<Evaluated> getViableTimeSlots(TimeTable timeTable, SlotItem slotItem) {
+        ArrayList<Evaluated> rv = new ArrayList<>();
 
         // Save a bit of processing by only looking at slots that match the type of slotItem
         ArrayList<TimeSlot> slots = slotItem.isLecture() ? timeTable.getAllLectureSlots() : timeTable.getAllLabSlots();
@@ -123,6 +126,9 @@ public class Assignments {
         for (TimeSlot slot : slots) {
             if (constr(slot, slotItem)) rv.add(eval(slot, slotItem));
         }
+
+        // Randomize ordering
+        Collections.shuffle(rv);
 
         return rv;
     }
@@ -319,11 +325,13 @@ public class Assignments {
      */
     private boolean isFullyCompatible(TimeSlot timeSlot, SlotItem item) {
         HashSet<SlotItem> others = getAssignment(timeSlot);
-        if (others == null) return true;
-
+        if (others == null) {
+		return true;
+	}
         for (SlotItem other : others) {
-            if (item.incompatibleWith(other))
+            if (item.incompatibleWith(other)) {
                 return false;
+		}
         }
 
         return true;
@@ -462,20 +470,20 @@ public class Assignments {
         if (numAssigned < timeSlot.getMin()) {
             // Currently below min. Subtract penalty if adding one new item will put us over
             if (numAssigned + 1 >= timeSlot.getMin())
-                val -= item.isLecture() ? penalties.getCourseMin() : penalties.getLabsMin();
+                val -= item.isLecture() ? (penalties.getCourseMin() * penalties.wMinFilled) : (penalties.getLabsMin() * penalties.wMinFilled);
         }
 
         // Check for a change in preferences. The only way the penalty imposed by assignments can go down is if we
         // removed Assignments. Since all we are going to do is add them, not remove them, the penalty can only increase
         // in this step, if it changes at all.
-        evalScore += item.getPreferencesForOtherSlots(timeSlot);
+        evalScore += (item.getPreferencesForOtherSlots(timeSlot) * penalties.wPref);
 
         // Check for a change in pairs.
         if (item.hasPairs()) {
             for (SlotItem paired : item.getPairs()) {
                 UnfilledPairs unfilledPairs = unfilledPairsMap.get(paired);
                 if ((unfilledPairs != null) && (unfilledPairs.expectsPair(item))) {
-                    if (!unfilledPairs.getTimeSlot().equals(timeSlot)) val += penalties.getNotPaired();
+                    if (!unfilledPairs.getTimeSlot().equals(timeSlot)) val += (penalties.getNotPaired() * penalties.wPair);
                 }
             }
         }
@@ -487,7 +495,7 @@ public class Assignments {
                 if (((item.isLecture() && assigned.isLecture())
                         || (!item.isLecture() && !assigned.isLecture()))
                         && item.sameCourse(assigned)) {
-                    val += penalties.getSection();
+                    val += (penalties.getSection() * penalties.wSecDiff);
                 }
             }
         }
@@ -533,4 +541,48 @@ public class Assignments {
             return expectedPairs.contains(other);
         }
     }
+        
+    public String toString() 
+    {
+    	//System.out.print("\b");
+    	String result = "";
+    	
+    	for (TimeSlot timeSlot : TimeTable.slots)
+		{
+ 			result += timeSlot.toString() + "\t";
+			
+			if (assignments.containsKey(timeSlot))
+			{
+				for (SlotItem item : assignments.get(timeSlot))
+				{
+					result += item.toString() + "\t";
+				}
+			}
+			result += "\n";
+		}
+    	
+    	return result;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

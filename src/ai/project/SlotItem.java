@@ -207,4 +207,12 @@ public abstract class SlotItem {
         return courseName + " " + courseNum;
     }
 
+    @Override
+    public int hashCode() {
+	int rv = courseNum * 10000;
+	rv += secNum * 100;
+	rv += courseName.hashCode();
+	return rv;
+    }
+
 }

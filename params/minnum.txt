@@ -1,0 +1,6 @@
+coursemin = labsmin = 100
+section = 10
+wminfilled = 1
+wpref = wsecdiff = 0
+
+best eval = 0

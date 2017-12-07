@@ -38,7 +38,7 @@ public class Department {
         this.departmentName = departmentName;
         timeTable = new TimeTable();
         courseTable = new CourseTable();
-        penalties = new Penalties(0,0,0,0);
+        penalties = new Penalties(0,0,0,0,0,0,0,0);
     }
 
     /**
@@ -130,27 +130,68 @@ public class Department {
     }
 
     /**
-     * Creates a partial assignment and adds it to the set of partial assignments.
+     * Creates a partial assignment for a lecture, and adds it to the set of partial assignments.
      * Because neither sample input file at this point includes example partial assignments,
      * this method may be subject to change.
      *
      * @param courseName The name of the course being assigned.
      * @param courseNum The number of the course being assigned.
-     * @param secNum The section number of the course (lab or tut #).
-     * @param isLab Are we assigning a lab?
+     * @param lecNum The section number of the lecture.
      * @param day The day string (as either MO, TU, or FR).
      * @param time The time string (as either H:MM or HH:MM).
      */
-    public void addPartial(String courseName, int courseNum, int secNum, boolean isLab, String day, String time) {
+    public void addPartialLecture(String courseName, int courseNum, int lecNum, String day, String time) {
         if (partialAssignments == null) {
             partialAssignments = new Assignments(penalties, timeTable);
         }
-        TimeSlot slot = timeTable.getSlot(day, time, isLab);
+        TimeSlot slot = timeTable.getSlot(day, time, false /*isLab*/);
         SlotItem course;
-        if (isLab)
-            course = courseTable.getLab(courseName, courseNum, secNum);
-        else
-            course = courseTable.getLecture(courseName, courseNum, secNum);
+        course = courseTable.getLecture(courseName, courseNum, lecNum);
+
+        if ((slot != null) && (course != null)) partialAssignments.addAssignment(slot, course);
+    }
+
+    /**
+     * Creates a partial assignment for an unparented lab, and adds it to the set of partial assignments.
+     * Because neither sample input file at this point includes example partial assignments,
+     * this method may be subject to change.
+     *
+     * @param courseName The name of the course being assigned.
+     * @param courseNum The number of the course being assigned.
+     * @param labNum The section number of the lab (lab or tut #).
+     * @param day The day string (as either MO, TU, or FR).
+     * @param time The time string (as either H:MM or HH:MM).
+     */
+    public void addPartialLab(String courseName, int courseNum, int labNum, String day, String time) {
+        if (partialAssignments == null) {
+            partialAssignments = new Assignments(penalties, timeTable);
+        }
+        TimeSlot slot = timeTable.getSlot(day, time, true /*isLab*/);
+        SlotItem course;
+        course = courseTable.getLab(courseName, courseNum, labNum);
+
+        if ((slot != null) && (course != null)) partialAssignments.addAssignment(slot, course);
+    }
+
+    /**
+     * Creates a partial assignment for a lab *with a parent*, and adds it to the set of partial assignments.
+     * Because neither sample input file at this point includes example partial assignments,
+     * this method may be subject to change.
+     *
+     * @param courseName The name of the course being assigned.
+     * @param courseNum The number of the course being assigned.
+     * @param lecNum The section number of the owning lecture.
+     * @param labNum The section number of the lab (lab or tut #).
+     * @param day The day string (as either MO, TU, or FR).
+     * @param time The time string (as either H:MM or HH:MM).
+     */
+    public void addPartialLab(String courseName, int courseNum, int lecNum, int labNum, String day, String time) {
+        if (partialAssignments == null) {
+            partialAssignments = new Assignments(penalties, timeTable);
+        }
+        TimeSlot slot = timeTable.getSlot(day, time, true /*isLab*/);
+        SlotItem course;
+        course = courseTable.getLab(courseName, courseNum, lecNum, labNum);
 
         if ((slot != null) && (course != null)) partialAssignments.addAssignment(slot, course);
     }
@@ -220,7 +261,7 @@ public class Department {
      * @param isLab Is the course a lab?
      */
     public void addUnwanted(String courseName, int courseNum, int secNum, String day, String time, boolean isLab) {
-        TimeSlot slot = timeTable.getSlot(day, time, /*isLab*/ isLab);
+        TimeSlot slot = timeTable.getSlot(day, time, isLab);
         if (isLab)
             courseTable.addUnwantedLab(courseName, courseNum, secNum, slot);
         else

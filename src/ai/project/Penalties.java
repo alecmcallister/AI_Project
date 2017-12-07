@@ -18,12 +18,22 @@ public class Penalties {
     private int labsMin;
     private int notPaired;
     private int section;
+    public int wMinFilled;
+    public int wPref;
+    public int wPair;
+    public int wSecDiff;
 
-    public Penalties(int courseMin, int labsMin, int notPaired, int section) {
+
+    public Penalties(int courseMin, int labsMin, int notPaired, int section,
+    			int wMinFilled, int wPref, int wPair, int wSecDiff) {
         this.courseMin = courseMin;
         this.labsMin = labsMin;
         this.notPaired = notPaired;
         this.section = section;
+	this.wMinFilled = wMinFilled;
+	this.wPref = wPref;
+	this.wPair = wPair;
+	this.wSecDiff = wSecDiff;
     }
 
     public int getCourseMin() {
@@ -41,4 +51,6 @@ public class Penalties {
     public int getSection() {
         return section;
     }
+
+  
 }

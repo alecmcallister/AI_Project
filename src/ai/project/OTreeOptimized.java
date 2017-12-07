@@ -91,7 +91,7 @@ public class OTreeOptimized {
             // remove it from the unassigned list
             unassigned.remove(toAssign);
             // get possible time slots to assign it to
-            TreeSet<Evaluated> evaluatedTimeSlots = assignments.getViableTimeSlots(timeTable, toAssign);
+            ArrayList<Evaluated> evaluatedTimeSlots = assignments.getViableTimeSlots(timeTable, toAssign);
 
             // assign it to all possible time slots and create temp prob set
             // need temp to reverse it in output
@@ -127,35 +127,35 @@ public class OTreeOptimized {
         /**
         * Generates a list of leaf nodes
         */
-        private void altern()
-        {
-            // Local Variables
-            SlotItem pNewItem;
-            TreeSet<Evaluated> pLeafs;
-            Assignments pNxtAssign;
-            m_pLeafs.clear(); // Clear Leafs at this level to force Depth-first search
-
-            // Check that Unassigned List is not empty, should have evaluated as valid solution before reaching here.
-            if ( !m_pUnassignedList.isEmpty() )
-            {
-                // Pull Item and get list of possible assignments
-                pNewItem = m_pUnassignedList.remove( m_pRand.nextInt(m_pUnassignedList.size()) );
-                pLeafs = m_pAssigned.getViableTimeSlots(m_pTbl, pNewItem);
-
-                //System.out.println( "\tNum Leafs assigned: " + pLeafs.size() );
-
-                // Generate Leafs based on evaluated assignments
-                for( Evaluated pEval : pLeafs )
-                {
-                    // New Prob with the Evaluated Assignment
-                    pNxtAssign = new Assignments( m_pAssigned );
-                    pNxtAssign.addAssignment(pEval.getTimeSlot(), pNewItem);
-
-                    // Generate Leaf base on that Prob
-                    m_pLeafs.add( new OTree( m_pDept, pNxtAssign, m_pUnassignedList ) );
-                }
-            }
-        }
+//        private void altern()
+//        {
+//            // Local Variables
+//            SlotItem pNewItem;
+//            TreeSet<Evaluated> pLeafs;
+//            Assignments pNxtAssign;
+//            m_pLeafs.clear(); // Clear Leafs at this level to force Depth-first search
+//
+//            // Check that Unassigned List is not empty, should have evaluated as valid solution before reaching here.
+//            if ( !m_pUnassignedList.isEmpty() )
+//            {
+//                // Pull Item and get list of possible assignments
+//                pNewItem = m_pUnassignedList.remove( m_pRand.nextInt(m_pUnassignedList.size()) );
+//                pLeafs = m_pAssigned.getViableTimeSlots(m_pTbl, pNewItem);
+//
+//                //System.out.println( "\tNum Leafs assigned: " + pLeafs.size() );
+//
+//                // Generate Leafs based on evaluated assignments
+//                for( Evaluated pEval : pLeafs )
+//                {
+//                    // New Prob with the Evaluated Assignment
+//                    pNxtAssign = new Assignments( m_pAssigned );
+//                    pNxtAssign.addAssignment(pEval.getTimeSlot(), pNewItem);
+//
+//                    // Generate Leaf base on that Prob
+//                    m_pLeafs.add( new OTree( m_pDept, pNxtAssign, m_pUnassignedList ) );
+//                }
+//            }
+//        }
 
         /**
          * Checks goal based on definition of Or-Tree Gv(s):

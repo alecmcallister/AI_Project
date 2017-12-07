@@ -28,47 +28,66 @@ public class Main
     
     public static void main(String args[]) 
     {
-//        String fileName1 = System.getProperty("user.dir") + "\\deptinst1.txt";
-//        String fileName2 = System.getProperty("user.dir") + "\\deptinst2.txt";
-//        readFile(fileName1);
-//        readFile(fileName2);        
-
-//        String fileName1 = System.getProperty("user.dir") + "\\deptinst3.txt";
-    	
-    	String dir = "";
+        String fileName1 = "";
+        String dir = "";
     	if (System.getProperty("os.name").equals("Mac OS X"))
     		dir = "/";
     	
     	else
     		dir = "\\";
-    		
-        String fileName1 = System.getProperty("user.dir") + dir + "deptinst3.txt";
+        
+        if (args.length > 0)
+            fileName1 = args[0];
+        else
+            fileName1 = fileName1 = System.getProperty("user.dir") + dir + "gehtnicht.txt";
 
-//        DoTest(fileName1);
-        OTreeOptimized m = new OTreeOptimized(null, null, null);
+        DoTest(fileName1);
+//        OTreeOptimized m = new OTreeOptimized(null, null, null);
     }
     
     public static void DoTest(String fileName) 
     {
-//    	ParsedData data = readFile(fileName);
     	Department department = readFile(fileName);  
-    	
-    	System.out.println("Department: " + department.getDepartmentName());
-    	
+    	    	
     	ArrayList<Assignments> F = new ArrayList<Assignments>();
+
+    	OTree orTree = new OTree(department, null, null);
     	
-    	while (F.size() < 2)
-		{
-        	OTree orTree = new OTree(department, null, null);
+		orTree = orTree.genSolution(0);
+
+    	while (F.size() < 2)	{
+        	orTree = new OTree(department, null, null);
         	
-        	orTree = orTree.genSolution();
+        	orTree = orTree.genSolution(0);
         	
         	if (orTree.isValid())
+        	{
         		F.add(orTree.getAssignments());
+        	}
+		else {
+			System.out.println("No solution found");
+			return;
 		}
+	}
 
     	SetSearch setSearch = new SetSearch(department);
-    	setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+    	OTree child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+        OTree best = null;
+
+        for (int i = 0; i < 20; i++) {
+            OTree temp = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+            if (best == null)
+                best = temp;
+            else if (temp.getAssignments().getEvalScore() < best.getAssignments().getEvalScore())
+                best = temp;
+        }
+        if (best != null && best.isValid()) {
+                System.out.println("Eval = " + best.getAssignments().getEvalScore());
+        }
+        else {
+            System.out.println("Invalid");
+        }
+	
     }
     
     public static Department readFile(String fileName) 
@@ -89,7 +108,8 @@ public class Main
 
             while((line = bufferedReader.readLine()) != null) {
                 if (line.equals("Name:")) {
-                    department = new Department(bufferedReader.readLine());
+                    line = bufferedReader.readLine();
+                    department = new Department(line);
                 }
                 if (line.equals("Course slots:")) {
                     currentInfo = Input.COURSE_SLOT;
@@ -241,28 +261,29 @@ public class Main
                 } 
                 else if (currentInfo == Input.PART_ASSIGN) 
                 {
-                    // input probably like:
+                	 // input probably like:
                     // day, time, courseName+lecture/tut
                     // Ex. MO, 8:00, CPSC 203 LEC 01
                     // Ex. MO, 17:00, CPSC 203 LEC 95 TUT 96
+                    // CPSC 433 LEC 01, MO, 8:00
                     String[] items = line.split(",");
-                    String[] slotData = items[2].trim().split(" ");
+                    String[] slotData = items[0].trim().split(" ");
                     
-                    String day = items[0];
-                    String time = items[1];
-                    boolean isLab = items[2].contains("TUT") || items[2].contains("LAB");
+                    String day = items[1];
+                    String time = items[2];
+                    boolean isLab = items[0].contains("TUT") || items[2].contains("LAB");
+
                     String courseName = slotData[0];
                     int courseNum = Integer.parseInt(slotData[1]);
                     int secNum = Integer.parseInt(slotData[slotData.length - 1]);
 
-//                    ArrayList<SlotItem> consolidatedList = new ArrayList<>();
-//                    consolidatedList.addAll(department.getAllCourses());
-
-//                    SlotItem course1 = SelectItem(consolidatedList, items[0]);
-//                    SlotItem course2 = SelectItem(consolidatedList, items[1]);
-
-                    // Do the department add partials thing here
-                    department.addPartial(courseName, courseNum, secNum, isLab, day, time);
+//                    department.addPartial(courseName, courseNum, secNum, isLab, day, time);
+                    if (isLab)
+                        department.addPartialLab(courseName, courseNum, secNum, day, time);
+                    else
+                        department.addPartialLecture(courseName, courseNum, secNum, day, time);
+                	
+                	// Do the department add partials thing here
                 }
             }
 
@@ -275,7 +296,7 @@ public class Main
             System.out.println("Error reading file '" + fileName + "'");
         }
         
-        System.out.println("Reading file completed...");
+        //System.out.println("Reading file completed...");
         return department;
     }
     

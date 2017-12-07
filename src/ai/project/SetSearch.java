@@ -2,26 +2,27 @@ package ai.project;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.TreeSet;
 
 public class SetSearch
 {
 	ArrayList<Assignments> F;
 	Department department;
 	
+	public static ArrayList<OTree> generated = new ArrayList<>();
+	
 	public SetSearch(Department department)
 	{
 		this.department = department;
 	}
 	
-	public Assignments DoTheSearchAlready(Assignments a, Assignments b)
-	{
+	public OTree DoTheSearchAlready(Assignments a, Assignments b)
+	{		
 		ArrayList<SlotItem> evolutionList =  new ArrayList<>();
 		evolutionList.addAll(department.getAllCourses());
 		
 		ArrayList<SlotItem> unassigned = new ArrayList<>();
 		
-		Assignments child = new Assignments(new Penalties(0, 0, 0, 0), department.getTimeTable());
+		Assignments child = new Assignments(OTree.penalties, department.getTimeTable());
 		
 		while (!evolutionList.isEmpty())
 		{
@@ -29,11 +30,8 @@ public class SetSearch
 			
 			TimeSlot slotA = a.getTimeSlot(randomItem);
 			TimeSlot slotB = b.getTimeSlot(randomItem);
-			
-			//System.out.println("Item selected: " + randomItem.toString() + "\t\tA: " + slotA.toString() + "\t\tB: " + slotB.toString());
-			
-			// Implement Constr* here to chose the timeslot where randomItem goes
-			TreeSet<Evaluated> result = child.assign(department.getTimeTable(), randomItem);
+						
+			ArrayList<Evaluated> result = child.getViableTimeSlots(department.getTimeTable(), randomItem);
 			
 			boolean assigned = false;
 			
@@ -52,8 +50,6 @@ public class SetSearch
 					break;	
 				}
 			}
-			
-			// If neither parent's slots were in result...
 			if (!assigned)
 			{
 				unassigned.add(randomItem);
@@ -61,11 +57,12 @@ public class SetSearch
 		}
 		
 		OTree childTree = new OTree(department, child, unassigned);
-		childTree.genSolution();
+		childTree.genSolution(0);
 		
-		System.out.println("Child solution found");
 		
-		return childTree.getAssignments();
+		generated.add(childTree);
+			
+		return childTree;
 	}
 }
 
