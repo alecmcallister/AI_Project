@@ -3,6 +3,28 @@ package ai.project;
 import java.io.*;
 import java.util.*;
 
+/**
+ * CPSC 433 Project
+ * Fall 2017
+ * Group 08
+ *
+ * Computes a solution to the course scheduling problem, as given by the assignment specification, using Set-based
+ * Search backed by an Or-Tree.
+ *
+ * Usage:
+ *  Compile as set of classes or jar. Call on command line as follows:
+ *       java (Main or JAR) [input-filename]
+ *       java (Main or JAR) [input-filename] [config-filename]
+ *
+ * Where:
+ *  input-filename is a path, relative or absolute, to the input file.
+ *  config-filename is a path, relative or absolute, to the config file
+ *
+ * If a config file is not specified, the application will try to load config.properties from the current directory.
+ * If that is not found, all penalties will be initialized to 0.
+ *
+ * A valid filename must be given for this program to run.
+ */
 public class Main
 {
 	private enum Input

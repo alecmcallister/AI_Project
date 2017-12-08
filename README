@@ -1,0 +1,54 @@
+CPSC 433 Project
+Fall 2017
+Group 08
+
+
+INSTALLING
+
+Compile using javac, either to a set of *.class files or a *.jar file.
+
+
+RUNNING
+
+The program must be run on the command line. It can be called in one of two ways:
+    java (Main or jar file) <input-filename>
+    java (Main or jar file) <input-filename> <config-filename>
+
+Where:
+    input-filename is the path, relative or absolute, to the file containing input.
+    config-filename is the path, relative or absolute, to the penalty value configuration file.
+
+If config-filename is not specified, the application will look for "config.properties" in the
+running directory. If this is not found, it will instead initialize all penalties and weights
+to 0.
+
+When done, the program will output the solution to stdout, and will also write to a file
+with the name <department>-schedule.txt, where department is the name of the department as
+provided in the input file.
+
+
+CONFIG
+
+config.properties is included with the project. It is reproduced below:
+     # This config file is used to set up penalty values for the search program.
+     #   penCourseMin = penalty for courses (lectures) not fulfilling minimum values
+     #   penLabsMin = penalty for labs (tutorials) not fulfilling minimum values
+     #   penNotPaired = penalty for paired courses not being scheduled together
+     #   penSection = penalty for multiple sections of the same course scheduled together
+     #   wMinFilled = weight applied to penCourseMin/penLabsMin
+     #   wPref = weight applied to preferences penalty
+     #   wPair = weight applied to penNotPaired
+     #   wSecDiff = weight applied to penSection
+    penCourseMin=100
+    penLabsMin=100
+    penNotPaired=0
+    penSection=10
+    wMinFilled=1
+    wPref=0
+    wPair=0
+    wSecDiff=0
+
+To alter penalty values, simply change the numerical values after the '=' for the respective
+properties.
+
+
