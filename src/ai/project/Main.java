@@ -160,7 +160,7 @@ public class Main
         while (F.size() < 2)
 		{
 			orTree = new OTree(department, department.getPartialAssignments(), unassigned);
-			orTree = orTree.genSolution(0);
+			orTree = orTree.genSolution();
 
 			if (orTree.isValid())
 			{
@@ -371,7 +371,7 @@ public class Main
 
 						for (Lecture lecture : department.getAllLectures())
 						{
-							if (lecture.courseName == courseName && lecture.courseNum == courseNum && lecture.secNum == secNum)
+							if (lecture.courseName.equals(courseName) && lecture.courseNum == courseNum && lecture.secNum == secNum)
 							{
 								parent = lecture;
 							}

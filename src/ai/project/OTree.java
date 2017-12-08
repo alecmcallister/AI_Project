@@ -110,7 +110,7 @@ public class OTree
 	 *
 	 * @return Either a Generated Solution that may or may not be valid (check isValid()) or null if OTree wasn't initialized properly.
 	 */
-	public OTree genSolution(int iID)
+	public OTree genSolution()
 	{
 		// Local Variables
 		OTree pReturnTree = null;
@@ -135,7 +135,7 @@ public class OTree
 				pReturnTree = m_pLeafs.remove(0);
 
 				// Recurse
-				pReturnTree = pReturnTree.genSolution(iID);
+				pReturnTree = pReturnTree.genSolution();
 			}
 			while (pReturnTree != null && (eSolution.YES != pReturnTree.m_eSol) && !m_pLeafs.isEmpty());
 
@@ -195,42 +195,5 @@ public class OTree
 	public boolean isValid()
 	{
 		return m_bInitialized && (m_eSol == eSolution.YES);
-	}
-
-	/**
-	 * Callable Branch class for Threading with a return value.
-	 *
-	 * @author James
-	 */
-	private class CallableBranch implements Callable<OTree>
-	{
-		// Callable Branch private variables
-		private OTree m_pInitialNode;
-		private int iID;
-
-		/**
-		 * Constructor - Give this a starting Tree to evaluate from
-		 *
-		 * @param pInitialNode Initial Tree to begin generating Solution from.
-		 */
-		public CallableBranch(OTree pInitialNode, int iNewID)
-		{
-			m_pInitialNode = new OTree(pInitialNode);
-			iID = iNewID;
-
-			if (null == pInitialNode)
-			{
-				throw new ExceptionInInitializerError();
-			}
-		}
-
-		@Override
-		/**
-		 * Inherited abstract call function, returns an OTree if One could be generated in time.
-		 */
-		public OTree call() throws Exception
-		{
-			return m_pInitialNode.genSolution(iID);
-		}
 	}
 }
