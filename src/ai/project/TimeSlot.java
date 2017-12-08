@@ -46,28 +46,6 @@ public class TimeSlot {
     }
 
     /**
-     * Constructor to build a time slot with 0 min/max and a given slot type.
-     *
-     * @param type The type of slot to use.
-     * @param time The time (in format of a double with H.MM; minute values will be rounded to nearest 0.5 / 0:30)
-     */
-    TimeSlot(SlotType type, double time) {
-        this(0, 0, new TimePair(type, time));
-    }
-
-    /**
-     * Min/max constructor.
-     *
-     * @param max The maximum value for this slot.
-     * @param min The minimum value for this slot.
-     * @param type The type of slot to use.
-     * @param time The time (in format of a double with H.MM; minute values will be rounded to nearest 0.5 / 0:30)
-     */
-    TimeSlot(int max, int min, SlotType type, double time) {
-        this(max, min, new TimePair(type, time));
-    }
-
-    /**
      * Min/max constructor which uses an existing TimePair.
      *
      * @param max The maximum value for this slot.

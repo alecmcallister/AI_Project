@@ -195,10 +195,6 @@ public abstract class SlotItem {
         return count;
     }
 
-    public int getNumPairs() {
-        return pairs.size();
-    }
-
     public HashSet<SlotItem> getPairs() {
         return new HashSet<>(pairs);
     }

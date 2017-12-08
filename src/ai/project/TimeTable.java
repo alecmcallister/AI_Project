@@ -42,7 +42,7 @@ public class TimeTable {
     public void updateTable(TimeSlot slot) 
     {
         if (slot.isLectureSlot()) {
-            TimeSlot oldSlot = lecSlots.get(slot);
+            TimeSlot oldSlot = lecSlots.get(slot.getTimePair());
             if (oldSlot != null) {
                 if (oldSlot.getMin() > 0) totalLecturesWithMinimum--;
                 lecSlots.replace(slot.getTimePair(), slot);
@@ -54,7 +54,7 @@ public class TimeTable {
             if (slot.getMin() > 0) totalLecturesWithMinimum++;
         }
         else {
-            TimeSlot oldSlot = labSlots.get(slot);
+            TimeSlot oldSlot = labSlots.get(slot.getTimePair());
             if (oldSlot != null) {
                 if (oldSlot.getMin() > 0) totalLabsWithMinimum--;
                 labSlots.replace(slot.getTimePair(), slot);
@@ -183,28 +183,6 @@ public class TimeTable {
         for (double i = 8.0; i <= 18.0; i += 2.0) {
             TimePair labPair = new TimePair(SlotType.F_LAB, i);
             labSlots.put(labPair, new TimeSlot(labPair));
-        }
-    }
-
-    /**
-     * Debug method. Prints out a (pretty much unordered) list of every slot in the time table.
-     */
-    private void debugPrintSlots() {
-        ArrayList<TimeSlot> lecSlotsList = getAllLectureSlots();
-        ArrayList<TimeSlot> labSlotsList = getAllLabSlots();
-
-        System.out.println("Lecture slots (" + lecSlotsList.size() + "):");
-        Iterator it = lecSlotsList.iterator();
-        while (it.hasNext()) {
-            System.out.println((TimeSlot)it.next());
-            it.remove();
-        }
-
-        System.out.println("\nLab slots:");
-        it = labSlotsList.iterator();
-        while (it.hasNext()) {
-            System.out.println((TimeSlot)it.next());
-            it.remove();
         }
     }
 }

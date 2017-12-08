@@ -1,7 +1,5 @@
 package ai.project;
 
-import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -113,21 +111,6 @@ public class Assignments
 			}
 		}
 	}
-
-    /**
-     * Removes an assignment from the set of current assignments, if it is present.
-     * @param timeSlot The TimeSlot of the assignment to remove.
-     * @param item The item to remove from the assignment to timeSlot.
-     */
-    public void removeAssignment(TimeSlot timeSlot, SlotItem item) {
-        if ((timeSlot.isLectureSlot() && item.isLecture())
-                || (timeSlot.isLabSlot() && !item.isLecture())) {
-            HashSet<SlotItem> set = assignments.get(timeSlot);
-            if (set != null && set.contains(item)) {
-                set.remove(item);
-            }
-        }
-    }
 
 	/**
 	 * Given a SlotItem and a TimeTable (representing the full set of available TimeSlots irrespective of assignments)
@@ -346,7 +329,6 @@ public class Assignments
 	 */
 	private boolean courseLabNoOverlap(TimeSlot timeSlot, SlotItem item)
 	{
-		HashSet<TimeSlot> overlapSlots = getAssignedOverlaps(timeSlot);
 		HashSet<SlotItem> overlapCourses = getAssignedOverlapCourses(timeSlot);
 
 		if (item.isLecture())
@@ -591,25 +573,6 @@ public class Assignments
 		}
 
 		return new Evaluated(timeSlot, val);
-	}
-
-    /**
-     * Debug method. Prints to System.out all Assignments aligned to times in a TimeTable.
-     *
-     * @param table The TimeTable to which to align the Assignments.
-     */
-	public void printWithTimeTable(TimeTable table) {
-		ArrayList<TimeSlot> timeSlots = table.getAllSlots();
-		for (TimeSlot timeSlot : timeSlots) {
-			System.out.print(timeSlot.toString() + "\t\t");
-			HashSet<SlotItem> assigns = getAssignment(timeSlot);
-			if (assigns != null) {
-				for (SlotItem item : getAssignment(timeSlot)) {
-					System.out.print(item.toString() + " ");
-				}
-			}
-			System.out.println();
-		}
 	}
 
 	/**

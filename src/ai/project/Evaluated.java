@@ -1,13 +1,11 @@
 package ai.project;
 
-import java.util.Comparator;
-
 /**
  * Evaluated class
  *
  * This class represents a pairing of a TimeSlot and an evaluation (soft constraint) value.
- * The reason this class is needed is to allow automatic sorting by a simple comparator on a TreeSet when we compute
- * eval for all possible assignments for a new SlotItem.
+ * The reason this class is needed is to allow an evaluation method that returns both the TimeSlot it's evaluating
+ * as well as the eval score.
  *
  * Eval must be computed separately (currently done in the Assignments class).
  * Note that instances of this class are not meant to be permanent; if assignments change they may render the eval value
@@ -31,7 +29,4 @@ public class Evaluated {
         return eval;
     }
 
-    public Integer getEvalWrapped() {
-        return eval;
-    }
 }

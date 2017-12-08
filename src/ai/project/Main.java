@@ -1,6 +1,3 @@
-/**
- * Created by dre3k on 2017-10-24.
- */
 package ai.project;
 
 import java.io.*;
@@ -10,17 +7,16 @@ public class Main
 {
 	private enum Input
 	{
-		DEPARTMENT_NAME, // = 0
-		COURSE_SLOT, // = 1
-		LAB_SLOT, // = 2
-		COURSE, // = 3
-		LAB, // = 4
-		NOT_COMPATIBLE, // = 5
-		UNWANTED, // = 6
-		PREFERENCE, // = 7
-		PAIR, // = 8
+		COURSE_SLOT,
+		LAB_SLOT,
+		COURSE,
+		LAB,
+		NOT_COMPATIBLE,
+		UNWANTED,
+		PREFERENCE,
+		PAIR,
 		PART_ASSIGN,
-		UNKNOWN; // = 9
+		UNKNOWN
 	}
 
 	public static void main(String args[])

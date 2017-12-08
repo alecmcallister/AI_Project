@@ -73,16 +73,6 @@ public class Department
 		this.penalties = penalties;
 	}
 
-	/**
-	 * Gets the name of the department.
-	 *
-	 * @return The name of the department.
-	 */
-	public String getDepartmentName()
-	{
-		return departmentName;
-	}
-
 
 	// ------------- Data Adders -------------
 
@@ -193,35 +183,6 @@ public class Department
 			partialAssignments.addAssignment(slot, course);
 		}
 	}
-
-	/**
-	 * Creates a partial assignment for a lab *with a parent*, and adds it to the set of partial assignments.
-	 * Because neither sample input file at this point includes example partial assignments,
-	 * this method may be subject to change.
-	 *
-	 * @param courseName The name of the course being assigned.
-	 * @param courseNum  The number of the course being assigned.
-	 * @param lecNum     The section number of the owning lecture.
-	 * @param labNum     The section number of the lab (lab or tut #).
-	 * @param day        The day string (as either MO, TU, or FR).
-	 * @param time       The time string (as either H:MM or HH:MM).
-	 */
-	public void addPartialLab(String courseName, int courseNum, int lecNum, int labNum, String day, String time)
-	{
-		if (partialAssignments == null)
-		{
-			partialAssignments = new Assignments(penalties, timeTable);
-		}
-		TimeSlot slot = timeTable.getSlot(day, time, true /*isLab*/);
-		SlotItem course;
-		course = courseTable.getLab(courseName, courseNum, lecNum, labNum);
-
-		if ((slot != null) && (course != null))
-		{
-			partialAssignments.addAssignment(slot, course);
-		}
-	}
-
 
 	// ------------- Constraint Adders -------------
 

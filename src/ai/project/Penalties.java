@@ -11,6 +11,12 @@ package ai.project;
  *
  *  The fifth type of penalty (for ignoring preferences) is variable, and so is not tracked by this class.
  *
+ *  We also track weights:
+ *  5. wMinFilled: The weight applied to the penalty for lectures or labs that do not meet the minimum value.
+ *  6. wPref: The weight applied to the penalty for courses in the wrong place, in terms of preferences.
+ *  7. wPair: The weight applied to the penalty for courses that are paired, yet still scheduled together.
+ *  8. wSecDiff: The weight applied to the penalty for different sections of the same course scheduled together.
+ *
  *  The purpose of the Penalties class is to simplify the passing of these penalty values throughout the application.
  */
 public class Penalties {
@@ -18,6 +24,7 @@ public class Penalties {
     private int labsMin;
     private int notPaired;
     private int section;
+
     public int wMinFilled;
     public int wPref;
     public int wPair;
@@ -30,10 +37,10 @@ public class Penalties {
         this.labsMin = labsMin;
         this.notPaired = notPaired;
         this.section = section;
-	this.wMinFilled = wMinFilled;
-	this.wPref = wPref;
-	this.wPair = wPair;
-	this.wSecDiff = wSecDiff;
+        this.wMinFilled = wMinFilled;
+        this.wPref = wPref;
+        this.wPair = wPair;
+        this.wSecDiff = wSecDiff;
     }
 
     public int getCourseMin() {
