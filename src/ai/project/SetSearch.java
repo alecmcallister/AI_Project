@@ -7,34 +7,66 @@ public class SetSearch
 {
 	ArrayList<Assignments> F;
 	Department department;
-	
+
 	public static ArrayList<OTree> generated = new ArrayList<>();
-	
+
 	public SetSearch(Department department)
 	{
 		this.department = department;
 	}
-	
+
+	public Assignments ChooseAParentIdiot(Assignments a, Assignments b)
+	{
+		int aEval = a.getEvalScore();
+		int bEval = b.getEvalScore();
+
+		if (aEval <= 0 || bEval <= 0)
+		{
+			aEval = 10;
+			bEval = 10;
+		}
+
+		int rand = new Random().nextInt(aEval + bEval);
+
+		if (aEval > bEval)
+		{
+			if (rand < aEval)
+				return b;
+
+			return a;
+		}
+		else
+		{
+			if (rand < bEval)
+				return a;
+
+			return b;
+		}
+	}
+
 	public OTree DoTheSearchAlready(Assignments a, Assignments b)
-	{		
-		ArrayList<SlotItem> evolutionList =  new ArrayList<>();
+	{
+		ArrayList<SlotItem> evolutionList = new ArrayList<>();
 		evolutionList.addAll(department.getAllCourses());
-		
+
 		ArrayList<SlotItem> unassigned = new ArrayList<>();
-		
+
 		Assignments child = new Assignments(OTree.penalties, department.getTimeTable());
-		
+
 		while (!evolutionList.isEmpty())
 		{
-			SlotItem randomItem = evolutionList.remove(new Random().nextInt(evolutionList.size()));			
-			
-			TimeSlot slotA = a.getTimeSlot(randomItem);
-			TimeSlot slotB = b.getTimeSlot(randomItem);
-						
+			SlotItem randomItem = evolutionList.remove(new Random().nextInt(evolutionList.size()));
+
+			Assignments firstChoice = ChooseAParentIdiot(a, b);
+			Assignments secondChoice = (firstChoice == a) ? b : a;
+
+			TimeSlot slotA = firstChoice.getTimeSlot(randomItem);
+			TimeSlot slotB = secondChoice.getTimeSlot(randomItem);
+
 			ArrayList<Evaluated> result = child.getViableTimeSlots(department.getTimeTable(), randomItem);
-			
+
 			boolean assigned = false;
-			
+
 			for (Evaluated evaluated : result)
 			{
 				if (evaluated.getTimeSlot().equals(slotA))
@@ -47,7 +79,7 @@ public class SetSearch
 				{
 					child.addAssignment(slotB, randomItem);
 					assigned = true;
-					break;	
+					break;
 				}
 			}
 			if (!assigned)
@@ -55,13 +87,13 @@ public class SetSearch
 				unassigned.add(randomItem);
 			}
 		}
-		
+
 		OTree childTree = new OTree(department, child, unassigned);
 		childTree.genSolution(0);
-		
-		
+
+
 		generated.add(childTree);
-			
+
 		return childTree;
 	}
 }

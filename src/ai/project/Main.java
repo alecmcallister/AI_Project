@@ -4,342 +4,459 @@
 package ai.project;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 import java.nio.file.*;
 
 public class Main
 {
-    private enum Input 
-    {
-        DEPARTMENT_NAME, // = 0
-        COURSE_SLOT, // = 1
-        LAB_SLOT, // = 2
-        COURSE, // = 3
-        LAB, // = 4
-        NOT_COMPATIBLE, // = 5 
-        UNWANTED, // = 6
-        PREFERENCE, // = 7
-        PAIR, // = 8
-        PART_ASSIGN,
-        UNKNOWN; // = 9
-    }
-    
-    public static void main(String args[]) 
-    {
-        String fileName1 = "";
-        String dir = "";
-    	if (System.getProperty("os.name").equals("Mac OS X"))
-    		dir = "/";
-    	
-    	else
-    		dir = "\\";
-        
-        if (args.length > 0)
-            fileName1 = args[0];
-        else
-            fileName1 = fileName1 = System.getProperty("user.dir") + dir + "gehtnicht.txt";
-
-        DoTest(fileName1);
-//        OTreeOptimized m = new OTreeOptimized(null, null, null);
-    }
-    
-    public static void DoTest(String fileName) 
-    {
-    	Department department = readFile(fileName);  
-    	    	
-    	ArrayList<Assignments> F = new ArrayList<Assignments>();
-
-    	OTree orTree = new OTree(department, null, null);
-    	
-		orTree = orTree.genSolution(0);
-
-    	while (F.size() < 2)	{
-        	orTree = new OTree(department, null, null);
-        	
-        	orTree = orTree.genSolution(0);
-        	
-        	if (orTree.isValid())
-        	{
-        		F.add(orTree.getAssignments());
-        	}
-		else {
-			System.out.println("No solution found");
-			return;
-		}
+	private enum Input
+	{
+		DEPARTMENT_NAME, // = 0
+		COURSE_SLOT, // = 1
+		LAB_SLOT, // = 2
+		COURSE, // = 3
+		LAB, // = 4
+		NOT_COMPATIBLE, // = 5
+		UNWANTED, // = 6
+		PREFERENCE, // = 7
+		PAIR, // = 8
+		PART_ASSIGN,
+		UNKNOWN; // = 9
 	}
 
-    	SetSearch setSearch = new SetSearch(department);
-    	OTree child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
-        OTree best = null;
+	public static void main(String args[])
+	{
+		String fileName1 = "";
+		String dir = "";
+		if (System.getProperty("os.name").equals("Mac OS X"))
+		{
+			dir = "/";
+		}
 
-        for (int i = 0; i < 20; i++) {
-            OTree temp = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
-            if (best == null)
-                best = temp;
-            else if (temp.getAssignments().getEvalScore() < best.getAssignments().getEvalScore())
-                best = temp;
-        }
-        if (best != null && best.isValid()) {
-                System.out.println("Eval = " + best.getAssignments().getEvalScore());
-        }
-        else {
-            System.out.println("Invalid");
-        }
-	
-    }
-    
-    public static Department readFile(String fileName) 
-    {
-        String line = null;
-        Input currentInfo = Input.UNKNOWN;
+		else
+		{
+			dir = "\\";
+		}
 
-        Department department = null;
-
-        try 
-        {
-        // FileReader reads text files in the default encoding.
-        FileReader fileReader = new FileReader(fileName);
+		if (args.length > 0)
+		{
+			fileName1 = args[0];
+		}
+		else
+		{
+			fileName1 = System.getProperty("user.dir") + dir + "gehtnicht1.txt";
+		}
 
 
-            // Always wrap FileReader in BufferedReader.
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+		String[] filenames = {
+				"gehtnicht1.txt",
+				"gehtnicht2.txt",
+				"gehtnicht3.txt",
+				"gehtnicht4.txt",
+				"gehtnicht5.txt",
+				"gehtnicht6.txt",
+				"gehtnicht7.txt",
+				"gehtnicht8.txt",
+				"gehtnicht9.txt",
+				"gehtnicht10.txt",
+				"gehtnicht11.txt",
+				"gehtnicht12.txt",
+				"minnumber.txt",
+				"pairing.txt",
+				"parallelpen.txt",
+				"partials.txt",
+				"prefexamp.txt"
+		};
 
-            while((line = bufferedReader.readLine()) != null) {
-                if (line.equals("Name:")) {
-                    line = bufferedReader.readLine();
-                    department = new Department(line);
-                }
-                if (line.equals("Course slots:")) {
-                    currentInfo = Input.COURSE_SLOT;
-                    line = bufferedReader.readLine();
-                }
-                if (line.equals("Lab slots:")) {
-                    currentInfo = Input.LAB_SLOT;
-                    line = bufferedReader.readLine();
-                }
-                if (line.equals("Courses:")) {
-                    currentInfo = Input.COURSE;
-                    line = bufferedReader.readLine();
-                }
-                if (line.equals("Labs:")) {
-                    currentInfo = Input.LAB;
-                    line = bufferedReader.readLine();
-                }
-                if (line.equals("Not compatible:")) {
-                    currentInfo = Input.NOT_COMPATIBLE;
-                    line = bufferedReader.readLine();
-                }
-                if (line.equals("Unwanted:")) {
-                    currentInfo = Input.UNWANTED;
-                    line = bufferedReader.readLine();
-                }
-                if (line.equals("Preferences:")) {
-                    currentInfo = Input.PREFERENCE;
-                    line = bufferedReader.readLine();
-                }
-                if (line.equals("Pair:")) {
-                    currentInfo = Input.PAIR;
-                    line = bufferedReader.readLine();
-                }
-                if (line.equals("Partial assignments:")) {
-                    currentInfo = Input.PART_ASSIGN;
-                    line = bufferedReader.readLine();
-                }
-                if (line.length() == 0) {
-                    currentInfo = Input.UNKNOWN;
-                }
+		for (String f : filenames)
+		{
+			System.out.println("Testing " + f);
+			f = System.getProperty("user.dir") + dir + f;
+			DoTest(f);
+		}
+//		DoTest(fileName1);
+//        OTreeOptimized m = new OTreeOptimized(null, null, null);
+	}
 
-                if (currentInfo == Input.COURSE_SLOT) 
-                {
-                    String[] split = line.split(",");
+	public static void DoTest(String fileName)
+	{
+		Department department = readFile(fileName);
 
-                    String day = split[0].trim();
-                    String time = split[1].trim();
-                    int max = Integer.parseInt(split[2].trim());
-                    int min = Integer.parseInt(split[3].trim());
-						
-                    department.addTimeSlot(day, time, max, min, false);
-                }
-                else if (currentInfo == Input.LAB_SLOT) 
-                {
-                    String[] split = line.split(",");
+		ArrayList<Assignments> F = new ArrayList<Assignments>();
 
-                    String day = split[0].trim();
-                    String time = split[1].trim();
-                    int max = Integer.parseInt(split[2].trim());
-                    int min = Integer.parseInt(split[3].trim());
-						
-                    department.addTimeSlot(day, time, max, min, true);
-                } 
-                else if (currentInfo == Input.COURSE) 
-                {
-                    String[] split = line.split(" ");
+		ArrayList<SlotItem> unassigned = new ArrayList<>();
+		unassigned.addAll(department.getAllCourses());
 
-                    String courseName = split[0];
-                    int courseNum = Integer.parseInt(split[1]);
-                    int lecNum = Integer.parseInt(split[3]);
+		Assignments partial = department.getPartialAssignments();
+		if (partial != null)
+		{
+			HashMap<TimeSlot, HashSet<SlotItem>> FUCK = partial.getAllAssignments();
 
-                    department.addLecture(courseName, courseNum, lecNum);
-                } 
-                else if (currentInfo == Input.LAB) 
-                {
-                    String[] split = line.split(" ");
-                    String courseName = split[0];
-                    int courseNum = Integer.parseInt(split[1]);
+			for (TimeSlot t : FUCK.keySet())
+			{
+				for (SlotItem s : FUCK.get(t))
+				{
+					if (unassigned.contains(s))
+						unassigned.remove(s);
+				}
+			}
+		}
+		OTree orTree = new OTree(department, partial, unassigned);
 
-                    if (split.length == 4)
-                    {
-                    int labNum = Integer.parseInt(split[3]);
+		orTree = orTree.genSolution(0);
 
-                    department.addLab(courseName, courseNum, labNum);
-                    }
-                    else if (split.length == 6)
-                    {
-                            int secNum = Integer.parseInt(split[3]);
-                    int labNum = Integer.parseInt(split[5]);
+		//System.out.println(orTree.getAssignments().toString());
 
-                    Lecture parent = null;
 
-                    for (Lecture lecture : department.getAllLectures())
-                        if (lecture.courseName == courseName && lecture.courseNum == courseNum && lecture.secNum == secNum)
-                                parent = lecture;
+		while (F.size() < 2)
+		{
+			orTree = new OTree(department, department.getPartialAssignments(), unassigned);
 
-                    if (parent != null)
-                        department.addLab(courseName, courseNum, labNum, parent.secNum);
+			orTree = orTree.genSolution(0);
 
-                    else
-                        department.addLab(courseName, courseNum, labNum);
-                    }
-                } 
-                else if (currentInfo == Input.NOT_COMPATIBLE) 
-                {
-                    String[] items = line.split(",");
+			if (orTree.isValid())
+			{
+				F.add(orTree.getAssignments());
+			}
+			else
+			{
+				System.out.println("No solution found\n");
+				return;
+			}
+		}
 
-                    ArrayList<SlotItem> consolidatedList = new ArrayList<>();
-                    consolidatedList.addAll(department.getAllCourses());
+		SetSearch setSearch = new SetSearch(department);
+		OTree child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+		OTree best = null;
 
-                    SlotItem course1 = SelectItem(consolidatedList, items[0]);
-                    SlotItem course2 = SelectItem(consolidatedList, items[1]);
+		for (int i = 0; i < 20; i++)
+		{
+			OTree temp = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+			if (best == null)
+			{
+				best = temp;
+			}
+			else if (temp.getAssignments().getEvalScore() < best.getAssignments().getEvalScore())
+			{
+				best = temp;
+			}
+		}
+		if (best != null && best.isValid())
+		{
+			System.out.println("Eval = " + best.getAssignments().getEvalScore() + "\n");
+		}
+		else
+		{
+			System.out.println("Invalid\n");
+		}
 
-                    department.addIncompatible(course1.courseName, course1.courseNum, course1.getClass() == Lab.class, course1.secNum, course2.courseName, course2.courseNum, course2.getClass() == Lab.class, course2.secNum);
-                } 
-                else if (currentInfo == Input.UNWANTED) 
-                {
-                    String[] items = line.split(",");
+	}
 
-                    ArrayList<SlotItem> consolidatedList = new ArrayList<>();
-                    consolidatedList.addAll(department.getAllCourses());
+	public static Department readFile(String fileName)
+	{
+		String line = null;
+		Input currentInfo = Input.UNKNOWN;
 
-                    SlotItem course = SelectItem(consolidatedList, items[0]);
+		Department department = null;
 
-                    department.addUnwanted(course.courseName, course.courseNum, course.secNum, items[1].trim(), items[2].trim(), course.getClass() == Lab.class);
-                } 
-                else if (currentInfo == Input.PREFERENCE) 
-                {
-                    String[] items = line.split(",");
+		try
+		{
+			// FileReader reads text files in the default encoding.
+			FileReader fileReader = new FileReader(fileName);
 
-                    ArrayList<SlotItem> consolidatedList = new ArrayList<>();
-                    consolidatedList.addAll(department.getAllCourses());
 
-                    SlotItem course = SelectItem(consolidatedList, items[2]);
+			// Always wrap FileReader in BufferedReader.
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-                    department.addPreference(course.courseName, course.courseNum, course.secNum, items[0], items[1].trim(), Integer.parseInt(items[3].trim()), course.getClass() == Lab.class);
-                } 
-                else if (currentInfo == Input.PAIR) 
-                {
-                    String[] items = line.split(",");
+			while ((line = bufferedReader.readLine()) != null)
+			{
+				if (line.equals("Name:"))
+				{
+					line = bufferedReader.readLine();
+					department = new Department(line);
+				}
+				if (line.equals("Course slots:"))
+				{
+					currentInfo = Input.COURSE_SLOT;
+					line = bufferedReader.readLine();
+				}
+				if (line.equals("Lab slots:"))
+				{
+					currentInfo = Input.LAB_SLOT;
+					line = bufferedReader.readLine();
+				}
+				if (line.equals("Courses:"))
+				{
+					currentInfo = Input.COURSE;
+					line = bufferedReader.readLine();
+				}
+				if (line.equals("Labs:"))
+				{
+					currentInfo = Input.LAB;
+					line = bufferedReader.readLine();
+				}
+				if (line.equals("Not compatible:"))
+				{
+					currentInfo = Input.NOT_COMPATIBLE;
+					line = bufferedReader.readLine();
+				}
+				if (line.equals("Unwanted:"))
+				{
+					currentInfo = Input.UNWANTED;
+					line = bufferedReader.readLine();
+				}
+				if (line.equals("Preferences:"))
+				{
+					currentInfo = Input.PREFERENCE;
+					line = bufferedReader.readLine();
+				}
+				if (line.equals("Pair:"))
+				{
+					currentInfo = Input.PAIR;
+					line = bufferedReader.readLine();
+				}
+				if (line.equals("Partial assignments:"))
+				{
+					currentInfo = Input.PART_ASSIGN;
+					line = bufferedReader.readLine();
+				}
+				if (line.length() == 0)
+				{
+					currentInfo = Input.UNKNOWN;
+				}
 
-                    ArrayList<SlotItem> consolidatedList = new ArrayList<>();
-                    consolidatedList.addAll(department.getAllCourses());
+				if (currentInfo == Input.COURSE_SLOT)
+				{
+					String[] split = line.split(",");
 
-                    SlotItem course1 = SelectItem(consolidatedList, items[0]);
-                    SlotItem course2 = SelectItem(consolidatedList, items[1]);
+					String day = split[0].trim();
+					String time = split[1].trim();
+					int max = Integer.parseInt(split[2].trim());
+					int min = Integer.parseInt(split[3].trim());
 
-                    department.addPair(course1.courseName, course1.courseNum, course1.secNum, course1.getClass() == Lab.class, course2.courseName, course2.courseNum, course2.secNum, course2.getClass() == Lab.class);                	
-                } 
-                else if (currentInfo == Input.PART_ASSIGN) 
-                {
-                	 // input probably like:
-                    // day, time, courseName+lecture/tut
-                    // Ex. MO, 8:00, CPSC 203 LEC 01
-                    // Ex. MO, 17:00, CPSC 203 LEC 95 TUT 96
-                    // CPSC 433 LEC 01, MO, 8:00
-                    String[] items = line.split(",");
-                    String[] slotData = items[0].trim().split(" ");
-                    
-                    String day = items[1];
-                    String time = items[2];
-                    boolean isLab = items[0].contains("TUT") || items[2].contains("LAB");
+					department.addTimeSlot(day, time, max, min, false);
+				}
+				else if (currentInfo == Input.LAB_SLOT)
+				{
+					String[] split = line.split(",");
 
-                    String courseName = slotData[0];
-                    int courseNum = Integer.parseInt(slotData[1]);
-                    int secNum = Integer.parseInt(slotData[slotData.length - 1]);
+					String day = split[0].trim();
+					String time = split[1].trim();
+					int max = Integer.parseInt(split[2].trim());
+					int min = Integer.parseInt(split[3].trim());
+
+					department.addTimeSlot(day, time, max, min, true);
+				}
+				else if (currentInfo == Input.COURSE)
+				{
+					String[] split = line.split(" ");
+
+					String courseName = split[0];
+					int courseNum = Integer.parseInt(split[1]);
+					int lecNum = Integer.parseInt(split[3]);
+
+					department.addLecture(courseName, courseNum, lecNum);
+					if (courseNum == 413 && courseName.equals("CPSC"))
+					{
+						department.addLecture(courseName, 913, lecNum);
+						department.addPartialLecture(courseName, 913, lecNum, "TU", "18:00");
+					}
+					if (courseNum == 313 && courseName.equals("CPSC"))
+					{
+						department.addLecture(courseName, 813, lecNum);
+						department.addPartialLecture(courseName, 813, lecNum, "TU", "18:00");
+					}
+
+
+				}
+				else if (currentInfo == Input.LAB)
+				{
+					String[] split = line.split(" ");
+					String courseName = split[0];
+					int courseNum = Integer.parseInt(split[1]);
+
+					if (split.length == 4)
+					{
+						int labNum = Integer.parseInt(split[3]);
+
+						department.addLab(courseName, courseNum, labNum);
+					}
+					else if (split.length == 6)
+					{
+						int secNum = Integer.parseInt(split[3]);
+						int labNum = Integer.parseInt(split[5]);
+
+						Lecture parent = null;
+
+						for (Lecture lecture : department.getAllLectures())
+						{
+							if (lecture.courseName == courseName && lecture.courseNum == courseNum && lecture.secNum == secNum)
+							{
+								parent = lecture;
+							}
+						}
+
+						if (parent != null)
+						{
+							department.addLab(courseName, courseNum, labNum, parent.secNum);
+						}
+
+						else
+						{
+							department.addLab(courseName, courseNum, labNum);
+						}
+					}
+				}
+				else if (currentInfo == Input.NOT_COMPATIBLE)
+				{
+					String[] items = line.split(",");
+
+					ArrayList<SlotItem> consolidatedList = new ArrayList<>();
+					consolidatedList.addAll(department.getAllCourses());
+
+					SlotItem course1 = SelectItem(consolidatedList, items[0]);
+					SlotItem course2 = SelectItem(consolidatedList, items[1]);
+
+					department.addIncompatible(course1.courseName, course1.courseNum, course1.getClass() == Lab.class, course1.secNum, course2.courseName, course2.courseNum, course2.getClass() == Lab.class, course2.secNum);
+				}
+				else if (currentInfo == Input.UNWANTED)
+				{
+					String[] items = line.split(",");
+
+					ArrayList<SlotItem> consolidatedList = new ArrayList<>();
+					consolidatedList.addAll(department.getAllCourses());
+
+					SlotItem course = SelectItem(consolidatedList, items[0]);
+
+					department.addUnwanted(course.courseName, course.courseNum, course.secNum, items[1].trim(), items[2].trim(), course.getClass() == Lab.class);
+				}
+				else if (currentInfo == Input.PREFERENCE)
+				{
+					String[] items = line.split(",");
+
+					ArrayList<SlotItem> consolidatedList = new ArrayList<>();
+					consolidatedList.addAll(department.getAllCourses());
+
+					SlotItem course = SelectItem(consolidatedList, items[2]);
+
+					department.addPreference(course.courseName, course.courseNum, course.secNum, items[0], items[1].trim(), Integer.parseInt(items[3].trim()), course.getClass() == Lab.class);
+				}
+				else if (currentInfo == Input.PAIR)
+				{
+					String[] items = line.split(",");
+
+					ArrayList<SlotItem> consolidatedList = new ArrayList<>();
+					consolidatedList.addAll(department.getAllCourses());
+
+					SlotItem course1 = SelectItem(consolidatedList, items[0]);
+					SlotItem course2 = SelectItem(consolidatedList, items[1]);
+
+					department.addPair(course1.courseName, course1.courseNum, course1.secNum, course1.getClass() == Lab.class, course2.courseName, course2.courseNum, course2.secNum, course2.getClass() == Lab.class);
+				}
+				else if (currentInfo == Input.PART_ASSIGN)
+				{
+					// input probably like:
+					// day, time, courseName+lecture/tut
+					// Ex. MO, 8:00, CPSC 203 LEC 01
+					// Ex. MO, 17:00, CPSC 203 LEC 95 TUT 96
+					// CPSC 433 LEC 01, MO, 8:00
+					String[] items = line.split(",");
+					String day = "";
+					String time = "";
+					String courseData = "";
+
+					for (String item : items) {
+						if (item.trim().length() == 2)
+							day = item.trim();
+						else if (item.trim().length() < 8 && item.contains(":"))
+							time = item.trim();
+						else if (item.trim().length() > 8)
+							courseData = item.trim();
+					}
+
+					String[] slotData = courseData.trim().split(" ");
+					boolean isLab = courseData.contains("TUT") || courseData.contains("LAB");
+
+					String courseName = slotData[0];
+					int courseNum = Integer.parseInt(slotData[1]);
+					int secNum = Integer.parseInt(slotData[slotData.length - 1]);
 
 //                    department.addPartial(courseName, courseNum, secNum, isLab, day, time);
-                    if (isLab)
-                        department.addPartialLab(courseName, courseNum, secNum, day, time);
-                    else
-                        department.addPartialLecture(courseName, courseNum, secNum, day, time);
-                	
-                	// Do the department add partials thing here
-                }
-            }
+					if (isLab)
+					{
+						department.addPartialLab(courseName, courseNum, secNum, day, time);
+					}
+					else
+					{
+						department.addPartialLecture(courseName, courseNum, secNum, day, time);
+					}
 
-            bufferedReader.close();
-        }
-        catch(FileNotFoundException ex) {
-            System.out.println("Unable to open file, file not found '" + fileName + "'");
-        }
-        catch(IOException ex) {
-            System.out.println("Error reading file '" + fileName + "'");
-        }
-        
-        //System.out.println("Reading file completed...");
-        return department;
-    }
-    
-    public static SlotItem SelectItem(ArrayList<SlotItem> fromList, String dirty)
-    {    	
-    	dirty = dirty.trim();
+					// Do the department add partials thing here
+				}
+			}
 
-    	String[] item = dirty.split(" ");
-    	
-    	String courseName = item[0];
-    	
-    	int courseNum = Integer.parseInt(item[1]);
-    	    	
-    	int courseSection = Integer.parseInt(item[3]); 
-    	
-    	int labSection = Integer.parseInt((item.length == 4) ? item[3] : item[5]);
-    	    	
+			bufferedReader.close();
+		}
+		catch (FileNotFoundException ex)
+		{
+			System.out.println("Unable to open file, file not found '" + fileName + "'");
+		}
+		catch (IOException ex)
+		{
+			System.out.println("Error reading file '" + fileName + "'");
+		}
+
+		//System.out.println("Reading file completed...");
+		return department;
+	}
+
+	public static SlotItem SelectItem(ArrayList<SlotItem> fromList, String dirty)
+	{
+		dirty = dirty.trim();
+
+		String[] item = dirty.split(" ");
+
+		String courseName = item[0];
+
+		int courseNum = Integer.parseInt(item[1]);
+
+		int courseSection = Integer.parseInt(item[3]);
+
+		int labSection = Integer.parseInt((item.length == 4) ? item[3] : item[5]);
+
 		for (SlotItem course : fromList)
 		{
 			if (course.getClass() == Lecture.class)
 			{
 				if (course.courseName.equals(courseName) && course.courseNum == courseNum && course.secNum == courseSection)
+				{
 					return course;
+				}
 			}
 			else
 			{
-				Lab lab = (Lab)course;
-				
+				Lab lab = (Lab) course;
+
 				if (!lab.hasParent())
 				{
 					if (lab.courseName.equals(courseName) && lab.courseNum == courseNum && lab.secNum == labSection)
+					{
 						return course;
+					}
 				}
 				else if (lab.hasParent())
 				{
 					if (lab.courseName.equals(courseName) && lab.courseNum == courseNum && lab.secNum == labSection && lab.getParent().secNum == courseSection)
+					{
 						return course;
+					}
 				}
 			}
 		}
-		
+
 		return null;
-    }
+	}
 }
 
 
