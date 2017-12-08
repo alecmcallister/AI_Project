@@ -89,19 +89,8 @@ public class Main
 		unassigned.addAll(department.getAllCourses());
 
 		Assignments partial = department.getPartialAssignments();
-		if (partial != null)
-		{
-			HashMap<TimeSlot, HashSet<SlotItem>> FUCK = partial.getAllAssignments();
-
-			for (TimeSlot t : FUCK.keySet())
-			{
-				for (SlotItem s : FUCK.get(t))
-				{
-					if (unassigned.contains(s))
-						unassigned.remove(s);
-				}
-			}
-		}
+        if (partial != null)
+            unassigned.removeAll(partial.getAllCourses());
 		OTree orTree = new OTree(department, partial, unassigned);
 
 		orTree = orTree.genSolution(0);

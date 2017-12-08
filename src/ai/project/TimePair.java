@@ -47,9 +47,8 @@ public class TimePair {
         String[] timeSegs = trimTime.split(":");
         int hour = Integer.parseInt(timeSegs[0]);
         int mins = Integer.parseInt(timeSegs[1]);
-
         double newTime = (double) hour;
-        newTime += (mins / 100);
+        if (mins >= 30) newTime += 0.5;
         this.time = boundTime(newTime);
     }
 
