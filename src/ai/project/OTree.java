@@ -35,6 +35,7 @@ public class OTree
 	private eSolution m_eSol;
 	private boolean m_bInitialized;
 	private Random m_pRand;
+	static int bestTry = Integer.MAX_VALUE;
 
 	/********************************************************************************\
 	 * Getters/Setters																*
@@ -126,6 +127,13 @@ public class OTree
 			if (m_pLeafs.isEmpty())
 			{
 				m_eSol = eSolution.NO;
+
+				if (m_pUnassignedList.size() < bestTry)
+				{
+					bestTry = m_pUnassignedList.size();
+					System.out.println("New best found: " + bestTry);
+					this.getAssignments().WriteToFile(m_pDept.departmentName + ".txt");
+				}
 				return this;
 			}
 

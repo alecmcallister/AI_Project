@@ -1,5 +1,9 @@
 package ai.project;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.*;
 
 /**
@@ -655,6 +659,18 @@ public class Assignments
         }
 
 		return result;
+	}
+
+	public void WriteToFile(String fileName)
+	{
+		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName.replace(".txt", "_sol.txt")), "utf-8")))
+		{
+			writer.write("Eval-value: " + getEvalScore() + "\n" + toString());
+		}
+		catch (Exception e)
+		{
+			System.err.println("[ERROR] Could write schedule to file.");
+		}
 	}
 
 }

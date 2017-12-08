@@ -217,14 +217,7 @@ public class Main
         System.out.println();
 		System.out.println("Eval-value: " + bestSchedule.getEvalScore() + "\n" + bestSchedule.toString() + "\n\n");
 
-		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName.replace(".txt", "_schedule.txt")), "utf-8")))
-		{
-			writer.write("Eval-value: " + bestSchedule.getEvalScore() + "\n" + bestSchedule.toString());
-		}
-		catch (Exception e)
-		{
-            System.err.println("[ERROR] Could write schedule to file.");
-		}
+		bestSchedule.WriteToFile(fileName);
 	}
 
     /**

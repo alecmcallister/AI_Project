@@ -19,7 +19,7 @@ import java.util.HashSet;
 
 public class Department
 {
-	private String departmentName;
+	public String departmentName;
 
 	private TimeTable timeTable;
 	private CourseTable courseTable;
