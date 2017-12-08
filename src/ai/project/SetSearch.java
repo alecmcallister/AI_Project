@@ -118,7 +118,7 @@ public class SetSearch
 		}
 
 		OTree childTree = new OTree(department, child, unassigned);
-		childTree.genSolution(0);
+		childTree.genSolution();
 
 		return childTree;
 	}
