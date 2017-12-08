@@ -38,10 +38,21 @@ public class Lab extends SlotItem {
 
     // ----------- Getters -----------
 
+    /**
+     * Retrieves the parent lecture of this Lab (i.e. the specific lecture section with which this lab is associated),
+     * if one exists.
+     *
+     * @return The parent lecture of this Lab if it has one, or null otherwise.
+     */
     public Lecture getParent() {
         return parent;
     }
 
+    /**
+     * Returns the section number (TUT #) of this lab.
+     *
+     * @return The TUT # of this lab.
+     */
     public int getLabNum() {
         return secNum;
     }
@@ -49,10 +60,20 @@ public class Lab extends SlotItem {
 
     // ----------- Predicates -----------
 
+    /**
+     * Predicate: does this Lab belong to a specific lecture section?
+     *
+     * @return True if this Lab has a parent lecture. False otherwise.
+     */
     public boolean hasParent() {
         return (parent != null);
     }
 
+    /**
+     * Polymorphic method for easy distinction between lectures and labs through the superclass.
+     *
+     * @return False, categorically.
+     */
     public boolean isLecture() { return false; }
 
 

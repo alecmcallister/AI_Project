@@ -164,6 +164,12 @@ public class Assignments
 		return new HashSet<>(assignments.get(timeSlot));
 	}
 
+    /**
+     * Gets the TimeSlot corresponding to a given SlotItem, if it exists in the Assignments.
+     *
+     * @param slotItem The SlotItem for which to search if we have an assigned TimeSlot.
+     * @return The TimeSlot the given SlotItem (or one equal to it) is assigned to.
+     */
 	public TimeSlot getTimeSlot(SlotItem slotItem)
 	{
 		for (TimeSlot element : assignments.keySet())
@@ -214,11 +220,22 @@ public class Assignments
         return rv;
     }
 
+    /**
+     * Get the set of penalties used for these Assignments.
+     *
+     * @return The set of penalties used for these Assignments.
+     */
 	public Penalties getPenalties()
 	{
 		return penalties;
 	}
 
+    /**
+     * Gets the commited eval score for these Assignments -- that is, the eval score as it stands for all courses
+     * as they are currently assigned.
+     *
+     * @return The current eval score for these Assignments.
+     */
 	public int getEvalScore()
 	{
 		return evalScore;
@@ -233,7 +250,6 @@ public class Assignments
 	public HashSet<TimeSlot> getAssignedOverlaps(TimeSlot timeSlot)
 	{
 		HashSet<TimeSlot> rv = new HashSet<>();
-		SlotType slotType = timeSlot.getSlotType();
 		Set<TimeSlot> candidates = assignments.keySet();
 
 		for (TimeSlot candidate : candidates)
@@ -512,7 +528,7 @@ public class Assignments
 	// ------------- Soft Constraint (Eval) Assessors ------------
 
 	/**
-	 * Evaluate the eval score after assigning a given SlotItem to a given timeSlot.
+	 * Calculate the eval score after assigning a given SlotItem to a given timeSlot.
 	 * Essentially just calculates the change to the evalScore of the overall Assignments to determine what the new
 	 * evalScore would be if the given assignment is added.
 	 *

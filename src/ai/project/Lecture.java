@@ -9,14 +9,36 @@ package ai.project;
  */
 public class Lecture extends SlotItem {
 
+    /**
+     * Sole constructor. Just a wrapper for the super constructor.
+     *
+     * @param courseName The name of the course (e.g. "CPSC", "SENG")
+     * @param courseNum The number of the course (e.g. 411, 201)
+     * @param lecNum The section number of the lecture (e.g. 1, 99).
+     */
     public Lecture(String courseName, int courseNum, int lecNum) {
         super(courseName, courseNum, lecNum);
     }
 
+    /**
+     * Polymorphic method for easy distinction between lectures and labs through the superclass.
+     *
+     * @return True, categorically.
+     */
     public boolean isLecture() { return true; }
 
+    /**
+     * Returns the section number (LEC #) of this lecture.
+     *
+     * @return The LEC # of this lab.
+     */
     public int getLecNum() { return secNum; }
 
+    /**
+     * Retrieves a string which identifies the lecture section of this lecture.
+     *
+     * @return A string in the format of "LEC %s", where %s is the section number of the lecture.
+     */
     public String getIdString() { return "LEC " + secNum;}
 
 

@@ -164,14 +164,30 @@ public abstract class SlotItem {
 
     // ------------ Getters ------------
 
+    /**
+     * Gets the name of the course.
+     *
+     * @return The name of hte course.
+     */
     public String getCourseName() {
         return courseName;
     }
 
+    /**
+     * Gets the number of the course as an integer.
+     *
+     * @return The number of the course.
+     */
     public int getCourseNum() {
         return courseNum;
     }
 
+    /**
+     * Gets an integer value representing this SlotItem's preference for a particular TimeSlot.
+     *
+     * @param time The TimeSlot for which we are retrieving a preference.
+     * @return The preference value for that slot if this SlotItem has a preference for it, otherwise 0.
+     */
     public int getPreferenceForSlot(TimeSlot time) {
         Integer temp = preferences.get(time);
         if (temp != null) return temp;
@@ -195,10 +211,20 @@ public abstract class SlotItem {
         return count;
     }
 
+    /**
+     * Get the set of all paired courses.
+     *
+     * @return A HashSet containing all SlotItems with which this SlotItem is paired.
+     */
     public HashSet<SlotItem> getPairs() {
         return new HashSet<>(pairs);
     }
 
+    /**
+     * Gets a string identifying this course.
+     *
+     * @return A string in the format of "NAME ###", where NAME is the course name, and ### is the course number.
+     */
     public String getCourseString() {
         return courseName + " " + courseNum;
     }

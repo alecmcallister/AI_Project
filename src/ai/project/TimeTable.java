@@ -22,15 +22,12 @@ public class TimeTable {
     private HashMap<TimePair, TimeSlot> labSlots;
     private int totalLecturesWithMinimum;
     private int totalLabsWithMinimum;
-    
-    public static ArrayList<TimeSlot> slots = new ArrayList<>(); 
 
     public TimeTable() {
         lecSlots = new HashMap<>();
         labSlots = new HashMap<>();
         totalLecturesWithMinimum = 0;
         totalLabsWithMinimum = 0;
-        slots.clear();
     }
 
     /**
@@ -49,7 +46,6 @@ public class TimeTable {
             }
             else {
                 lecSlots.put(slot.getTimePair(), slot);
-                slots.add(slot);
             }
             if (slot.getMin() > 0) totalLecturesWithMinimum++;
         }
@@ -61,7 +57,6 @@ public class TimeTable {
             }
             else {
                 labSlots.put(slot.getTimePair(), slot);
-                slots.add(slot);
             }
             if (slot.getMin() > 0) totalLabsWithMinimum++;
         }
@@ -105,10 +100,17 @@ public class TimeTable {
         return getSlot(temp);
     }
 
+    /**
+     * Get the TimeSlot for a given time, if it exists. Overload which does not require a SlotType.
+     *
+     * @param day A string for the day; one of "MO", "TU", or "FR".
+     * @param time The time as a double (HH.MM).
+     * @param isLab Is this a slot for a lab? True if this is a lab slot, false otherwise.
+     * @return The TimeSlot, if it exists. Null if it is not in the TimeTable.
+     */
     public TimeSlot getSlot(String day, String time, boolean isLab) {
         return getSlot(new TimePair(day, time, isLab));
     }
-
 
     /**
      * Returns an unordered ArrayList containing all time slots in the table.
@@ -145,44 +147,25 @@ public class TimeTable {
         return new ArrayList<>(lecSlots.values());
     }
 
+    /**
+     * Computes the total number of lecture slots in the TimeTable that have a minimum value.
+     * Used to establish a baseline penalty for a fresh set of Assignments (i.e. what is the eval score if
+     * we literally assign nothing?).
+     *
+     * @return The total number of lecture slots in the TimeTable with a minimum value.
+     */
     public int getTotalLecturesWithMinimum() {
         return totalLecturesWithMinimum;
     }
 
+    /**
+     * Computes the total number of lab slots in the TimeTable that have a minimum value.
+     * Used to establish a baseline penalty for a fresh set of Assignments (i.e. what is the eval score if
+     * we literally assign nothing?).
+     *
+     * @return The total number of lab slots in the TimeTable with a minimum value.
+     */
     public int getTotalLabsWithMinimum() {
         return totalLabsWithMinimum;
-    }
-
-    /**
-     * Initializes the time table with all slots given in the assignment spec.
-     * All entries are initialized with min/max both at 0.
-     */
-    public void initializeTable() {
-        // Create new, empty HashMaps
-        lecSlots = new HashMap<>();
-        labSlots = new HashMap<>();
-
-        // MWF lectures, MW labs, and TuTh labs
-        for (double i = 8.0; i <= 20.0; i += 1.0) {
-            TimePair lecPair = new TimePair(SlotType.MWF_LEC, i);
-            TimePair mwLabPair = new TimePair(SlotType.MW_LAB, i);
-            TimePair ttLabPair = new TimePair(SlotType.TT_LAB, i);
-
-            lecSlots.put(lecPair, new TimeSlot(lecPair));
-            labSlots.put(mwLabPair, new TimeSlot(mwLabPair));
-            labSlots.put(ttLabPair, new TimeSlot(ttLabPair));
-        }
-
-        // TuTh lectures
-        for (double i = 8.0; i <= 18.5; i+= 1.5) {
-            TimePair lecPair = new TimePair(SlotType.TT_LEC, i);
-            lecSlots.put(lecPair, new TimeSlot(lecPair));
-        }
-
-        // Friday labs
-        for (double i = 8.0; i <= 18.0; i += 2.0) {
-            TimePair labPair = new TimePair(SlotType.F_LAB, i);
-            labSlots.put(labPair, new TimeSlot(labPair));
-        }
     }
 }

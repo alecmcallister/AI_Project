@@ -36,28 +36,6 @@ public class TimeSlot {
         this.min = min;
     }
 
-    /**
-     * Constructor which uses an existing TimePair and 0 min/max and a given type.
-     *
-     * @param timePair An already-instantiated TimePair object.
-     */
-    TimeSlot(TimePair timePair) {
-        this(0, 0, timePair);
-    }
-
-    /**
-     * Min/max constructor which uses an existing TimePair.
-     *
-     * @param max The maximum value for this slot.
-     * @param min The minimum value for this slot.
-     * @param timePair An already-instantiated TimePair object.
-     */
-    TimeSlot(int max, int min, TimePair timePair) {
-        this.timePair = timePair;
-        this.max = max;
-        this.min = min;
-    }
-
     // -------------- Getters --------------
 
     /**

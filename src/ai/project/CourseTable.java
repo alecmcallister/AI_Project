@@ -304,20 +304,6 @@ public class CourseTable {
     }
 
     /**
-     * Gets a Lab with a parent from the CourseTable.
-     * May return null if the Lab is not in the table.
-     *
-     * @param courseName The name of the course (e.g. CPSC, SENG).
-     * @param courseNum The number of the course (e.g. 203, 433).
-     * @param lecNum The section number (lec #) for the parent lecture of this lab.
-     * @param labNum The section number (tut #) for the lab.
-     * @return A reference to the Lab in the table, or null if nothing in the table matches the params.
-     */
-    public Lab getLab(String courseName, int courseNum, int lecNum, int labNum) {
-        return getPair(courseName, courseNum).labs.get(new LabSecPair(lecNum, labNum));
-    }
-
-    /**
      * Gets the set of all Lectures in the CourseTable.
      * There is no guarantee on sorting for the returned set; Lectures may be in any order, but are guaranteed to
      * be unique.
@@ -432,11 +418,6 @@ public class CourseTable {
     private class LabSecPair {
         public int lecNum;
         public int labNum;
-
-        LabSecPair(int lecNum, int labNum) {
-            this.lecNum = lecNum;
-            this.labNum = labNum;
-        }
 
         LabSecPair(int labNum) {
             this.labNum = labNum;
