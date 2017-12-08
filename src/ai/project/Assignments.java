@@ -114,6 +114,21 @@ public class Assignments
 		}
 	}
 
+    /**
+     * Removes an assignment from the set of current assignments, if it is present.
+     * @param timeSlot The TimeSlot of the assignment to remove.
+     * @param item The item to remove from the assignment to timeSlot.
+     */
+    public void removeAssignment(TimeSlot timeSlot, SlotItem item) {
+        if ((timeSlot.isLectureSlot() && item.isLecture())
+                || (timeSlot.isLabSlot() && !item.isLecture())) {
+            HashSet<SlotItem> set = assignments.get(timeSlot);
+            if (set != null && set.contains(item)) {
+                set.remove(item);
+            }
+        }
+    }
+
 	/**
 	 * Given a SlotItem and a TimeTable (representing the full set of available TimeSlots irrespective of assignments)
 	 * this method finds all slots that meet constr() in the current Assignments (see below) and returns these slots
@@ -126,8 +141,6 @@ public class Assignments
 	 *                  is not aware of any TimeSlots that it doesn't yet assign anything to.
 	 * @param slotItem  The SlotItem we want to assign.
 	 */
-//    public TreeSet<Evaluated> getViableTimeSlots(TimeTable timeTable, SlotItem slotItem) {
-//        TreeSet<Evaluated> rv = new TreeSet<>(new EvalCompare());
 	public ArrayList<Evaluated> getViableTimeSlots(TimeTable timeTable, SlotItem slotItem)
 	{
 		ArrayList<Evaluated> rv = new ArrayList<>();
@@ -204,6 +217,19 @@ public class Assignments
 	{
 		return new HashMap<>(assignments);
 	}
+
+    /**
+     * Gets the set of all courses assigned somewhere in these Assignments.
+     *
+     * @return A set containing all courses currently assigned in this Assignments.
+     */
+    public HashSet<SlotItem> getAllCourses() {
+        HashSet<SlotItem> rv = new HashSet<>();
+        for (HashSet<SlotItem> set : getAllAssignments().values()) {
+            rv.addAll(set);
+        }
+        return rv;
+    }
 
 	public Penalties getPenalties()
 	{
@@ -543,7 +569,7 @@ public class Assignments
 		// Check for a change in preferences. The only way the penalty imposed by assignments can go down is if we
 		// removed Assignments. Since all we are going to do is add them, not remove them, the penalty can only increase
 		// in this step, if it changes at all.
-		evalScore += (item.getPreferencesForOtherSlots(timeSlot) * penalties.wPref);
+		val += (item.getPreferencesForOtherSlots(timeSlot) * penalties.wPref);
 
 		// Check for a change in pairs.
 		if (item.hasPairs())
@@ -574,6 +600,25 @@ public class Assignments
 		}
 
 		return new Evaluated(timeSlot, val);
+	}
+
+    /**
+     * Debug method. Prints to System.out all Assignments aligned to times in a TimeTable.
+     *
+     * @param table The TimeTable to which to align the Assignments.
+     */
+	public void printWithTimeTable(TimeTable table) {
+		ArrayList<TimeSlot> timeSlots = table.getAllSlots();
+		for (TimeSlot timeSlot : timeSlots) {
+			System.out.print(timeSlot.toString() + "\t\t");
+			HashSet<SlotItem> assigns = getAssignment(timeSlot);
+			if (assigns != null) {
+				for (SlotItem item : getAssignment(timeSlot)) {
+					System.out.print(item.toString() + " ");
+				}
+			}
+			System.out.println();
+		}
 	}
 
 	/**
