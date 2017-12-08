@@ -127,29 +127,39 @@ public class Main
 		}
 
 		SetSearch setSearch = new SetSearch(department);
-		OTree child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+//		OTree child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
 		OTree best = null;
+		Assignments bestSchedule;
 
-		for (int i = 0; i < 20; i++)
+		for (int i = 0; i < 1000; i++)
 		{
 			OTree temp = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+
+			if (!temp.isValid())
+				continue;
+
 			if (best == null)
 			{
 				best = temp;
 			}
-			else if (temp.getAssignments().getEvalScore() < best.getAssignments().getEvalScore())
+			else if (temp.getAssignments().getEvalScore() <= best.getAssignments().getEvalScore())
 			{
 				best = temp;
+
+				if (temp.getAssignments().getEvalScore() == 0)
+					break;
 			}
 		}
-		if (best != null && best.isValid())
+		if (best == null)
 		{
-			System.out.println("Eval = " + best.getAssignments().getEvalScore() + "\n");
+			System.out.println("Unable to create child solution.\nReverting to best parent...");
+			bestSchedule = (F.get(0).getEvalScore() < F.get(1).getEvalScore()) ? F.get(0) : F.get(1);
 		}
 		else
-		{
-			System.out.println("Invalid\n");
-		}
+			bestSchedule = best.getAssignments();
+
+
+		System.out.println("Eval = " + bestSchedule.getEvalScore() + "\n");
 
 	}
 
