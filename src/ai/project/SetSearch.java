@@ -5,17 +5,14 @@ import java.util.Random;
 
 public class SetSearch
 {
-	ArrayList<Assignments> F;
 	Department department;
-
-	public static ArrayList<OTree> generated = new ArrayList<>();
 
 	public SetSearch(Department department)
 	{
 		this.department = department;
 	}
 
-	public Assignments ChooseAParentIdiot(Assignments a, Assignments b)
+	public Assignments ChooseParent(Assignments a, Assignments b)
 	{
 		int aEval = a.getEvalScore();
 		int bEval = b.getEvalScore();
@@ -49,6 +46,9 @@ public class SetSearch
 		ArrayList<SlotItem> evolutionList = new ArrayList<>();
 		evolutionList.addAll(department.getAllCourses());
 
+		if (department.getPartialAssignments() != null)
+			evolutionList.removeAll(department.getPartialAssignments().getAllCourses());
+
 		ArrayList<SlotItem> unassigned = new ArrayList<>();
 
 		Assignments child = new Assignments(OTree.penalties, department.getTimeTable());
@@ -57,7 +57,7 @@ public class SetSearch
 		{
 			SlotItem randomItem = evolutionList.remove(new Random().nextInt(evolutionList.size()));
 
-			Assignments firstChoice = ChooseAParentIdiot(a, b);
+			Assignments firstChoice = ChooseParent(a, b);
 			Assignments secondChoice = (firstChoice == a) ? b : a;
 
 			TimeSlot slotA = firstChoice.getTimeSlot(randomItem);
@@ -90,9 +90,6 @@ public class SetSearch
 
 		OTree childTree = new OTree(department, child, unassigned);
 		childTree.genSolution(0);
-
-
-		generated.add(childTree);
 
 		return childTree;
 	}

@@ -215,6 +215,14 @@ public class Assignments
 		return evalScore;
 	}
 
+	public HashSet<SlotItem> getAllCourses() {
+		HashSet<SlotItem> rv = new HashSet<>();
+		for (HashSet<SlotItem> set : getAllAssignments().values()) {
+			rv.addAll(set);
+		}
+		return rv;
+	}
+
 
 	/**
 	 * Get all TimeSlots that overlap with a given TimeSlot and have something assigned to them.

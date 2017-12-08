@@ -6,8 +6,6 @@ package ai.project;
 import java.io.*;
 import java.util.*;
 
-import java.nio.file.*;
-
 public class Main
 {
 	private enum Input
@@ -50,36 +48,36 @@ public class Main
 
 
 		String[] filenames = {
-				"gehtnicht1.txt",
-				"gehtnicht2.txt",
-				"gehtnicht3.txt",
-				"gehtnicht4.txt",
-				"gehtnicht5.txt",
-				"gehtnicht6.txt",
-				"gehtnicht7.txt",
-				"gehtnicht8.txt",
-				"gehtnicht9.txt",
-				"gehtnicht10.txt",
-				"gehtnicht11.txt",
-				"gehtnicht12.txt",
-				"minnumber.txt",
-				"pairing.txt",
-				"parallelpen.txt",
-				"partials.txt",
-				"prefexamp.txt",
-//				"deptinst1.txt",
-//				"deptinst2.txt"
+//				"gehtnicht1.txt",
+//				"gehtnicht2.txt",
+//				"gehtnicht3.txt",
+//				"gehtnicht4.txt",
+//				"gehtnicht5.txt",
+//				"gehtnicht6.txt",
+//				"gehtnicht7.txt",
+//				"gehtnicht8.txt",
+//				"gehtnicht9.txt",
+//				"gehtnicht10.txt",
+//				"gehtnicht11.txt",
+//				"gehtnicht12.txt",
+//				"minnumber.txt",
+//				"pairing.txt",
+//				"parallelpen.txt",
+//				"partials.txt",
+//				"prefexamp.txt",
+				"deptinst1.txt",
+				"deptinst2.txt"
 		};
 
 		for (String f : filenames)
 		{
 			System.out.println("Testing " + f);
 			f = System.getProperty("user.dir") + dir + f;
-			DoTest(f);
+			ParseAndCompute(f);
 		}
 	}
 
-	public static void DoTest(String fileName)
+	public static void ParseAndCompute(String fileName)
 	{
 		Department department = readFile(fileName);
 
@@ -89,19 +87,10 @@ public class Main
 		unassigned.addAll(department.getAllCourses());
 
 		Assignments partial = department.getPartialAssignments();
-		if (partial != null)
-		{
-			HashMap<TimeSlot, HashSet<SlotItem>> FUCK = partial.getAllAssignments();
 
-			for (TimeSlot t : FUCK.keySet())
-			{
-				for (SlotItem s : FUCK.get(t))
-				{
-					if (unassigned.contains(s))
-						unassigned.remove(s);
-				}
-			}
-		}
+		if (partial != null)
+			unassigned.removeAll(partial.getAllCourses());
+
 		OTree orTree = new OTree(department, partial, unassigned);
 
 		orTree = orTree.genSolution(0);
@@ -137,6 +126,7 @@ public class Main
 				parentA = (parentA.getEvalScore() < parentB.getEvalScore()) ? parentA : parentB;
 				parentB = best.getAssignments();
 			}
+
 			OTree temp = setSearch.DoTheSearchAlready(parentA, parentB);
 
 			if (!temp.isValid())
@@ -178,7 +168,7 @@ public class Main
 
 	public static Department readFile(String fileName)
 	{
-		String line = null;
+		String line;
 		Input currentInfo = Input.UNKNOWN;
 
 		Department department = null;
