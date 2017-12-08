@@ -46,12 +46,18 @@ public class SetSearch
 		ArrayList<SlotItem> evolutionList = new ArrayList<>();
 		evolutionList.addAll(department.getAllCourses());
 
-		if (department.getPartialAssignments() != null)
-			evolutionList.removeAll(department.getPartialAssignments().getAllCourses());
+        Assignments child;
+		if (department.getPartialAssignments() != null) {
+            evolutionList.removeAll(department.getPartialAssignments().getAllCourses());
+            child = new Assignments(department.getPartialAssignments());
+        }
+        else {
+            child = new Assignments(OTree.penalties, department.getTimeTable());
+        }
 
 		ArrayList<SlotItem> unassigned = new ArrayList<>();
 
-		Assignments child = new Assignments(OTree.penalties, department.getTimeTable());
+
 
 		while (!evolutionList.isEmpty())
 		{
