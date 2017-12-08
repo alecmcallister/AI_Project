@@ -1,6 +1,7 @@
 package ai.project;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -619,18 +620,26 @@ public class Assignments
 	{
 		String result = "";
 
-		for (TimeSlot timeSlot : TimeTable.slots)
+		for (TimeSlot timeslot : assignments.keySet())
 		{
-			result += timeSlot.toString() + "\t";
-
-			if (assignments.containsKey(timeSlot))
+			String dayTime = String.format("%.2f, ", timeslot.getTime()).replace(".", ":");
+			switch (timeslot.getTimePair().getType())
 			{
-				for (SlotItem item : assignments.get(timeSlot))
-				{
-					result += item.toString() + "\t";
-				}
+				case TT_LAB:
+				case TT_LEC:
+					dayTime = "TU, " + dayTime;
+					break;
+				case MW_LAB:
+				case MWF_LEC:
+					dayTime = "MO, " + dayTime;
+					break;
+				case F_LAB:
+					dayTime = "FR, " + dayTime;
+					break;
 			}
-			result += "\n";
+
+			for (SlotItem s : assignments.get(timeslot))
+				result += dayTime + s.toString().replace("[", "").replace("]", "") + "\n";
 		}
 
 		return result;

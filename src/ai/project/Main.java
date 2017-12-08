@@ -66,7 +66,9 @@ public class Main
 				"pairing.txt",
 				"parallelpen.txt",
 				"partials.txt",
-				"prefexamp.txt"
+				"prefexamp.txt",
+//				"deptinst1.txt",
+//				"deptinst2.txt"
 		};
 
 		for (String f : filenames)
@@ -75,8 +77,6 @@ public class Main
 			f = System.getProperty("user.dir") + dir + f;
 			DoTest(f);
 		}
-//		DoTest(fileName1);
-//        OTreeOptimized m = new OTreeOptimized(null, null, null);
 	}
 
 	public static void DoTest(String fileName)
@@ -106,9 +106,6 @@ public class Main
 
 		orTree = orTree.genSolution(0);
 
-		//System.out.println(orTree.getAssignments().toString());
-
-
 		while (F.size() < 2)
 		{
 			orTree = new OTree(department, department.getPartialAssignments(), unassigned);
@@ -127,13 +124,20 @@ public class Main
 		}
 
 		SetSearch setSearch = new SetSearch(department);
-//		OTree child = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
 		OTree best = null;
 		Assignments bestSchedule;
 
-		for (int i = 0; i < 1000; i++)
+		for (int i = 0; i < 20; i++)
 		{
-			OTree temp = setSearch.DoTheSearchAlready(F.get(0), F.get(1));
+			Assignments parentA = F.get(0);
+			Assignments parentB = F.get(1);
+
+			if (best != null)
+			{
+				parentA = (parentA.getEvalScore() < parentB.getEvalScore()) ? parentA : parentB;
+				parentB = best.getAssignments();
+			}
+			OTree temp = setSearch.DoTheSearchAlready(parentA, parentB);
 
 			if (!temp.isValid())
 				continue;
@@ -142,9 +146,10 @@ public class Main
 			{
 				best = temp;
 			}
-			else if (temp.getAssignments().getEvalScore() <= best.getAssignments().getEvalScore())
+			else if (temp.getAssignments().getEvalScore() < best.getAssignments().getEvalScore())
 			{
 				best = temp;
+				System.out.println("New best eval: " + best.getAssignments().getEvalScore());
 
 				if (temp.getAssignments().getEvalScore() == 0)
 					break;
@@ -160,6 +165,14 @@ public class Main
 
 
 		System.out.println("Eval = " + bestSchedule.getEvalScore() + "\n" + bestSchedule.toString() + "\n\n");
+
+		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName.replace(".txt", "_schedule.txt")), "utf-8")))
+		{
+			writer.write("Eval = " + bestSchedule.getEvalScore() + "\n" + bestSchedule.toString());
+		}
+		catch (Exception e)
+		{
+		}
 
 	}
 
