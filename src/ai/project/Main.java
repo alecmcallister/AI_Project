@@ -48,25 +48,25 @@ public class Main
 
 
 		String[] filenames = {
-//				"gehtnicht1.txt",
-//				"gehtnicht2.txt",
-//				"gehtnicht3.txt",
-//				"gehtnicht4.txt",
-//				"gehtnicht5.txt",
-//				"gehtnicht6.txt",
-//				"gehtnicht7.txt",
-//				"gehtnicht8.txt",
-//				"gehtnicht9.txt",
-//				"gehtnicht10.txt",
-//				"gehtnicht11.txt",
-//				"gehtnicht12.txt",
-//				"minnumber.txt",
-//				"pairing.txt",
-//				"parallelpen.txt",
-//				"partials.txt",
-//				"prefexamp.txt",
-				"deptinst1.txt",
-				"deptinst2.txt"
+				"gehtnicht1.txt",
+				"gehtnicht2.txt",
+				"gehtnicht3.txt",
+				"gehtnicht4.txt",
+				"gehtnicht5.txt",
+				"gehtnicht6.txt",
+				"gehtnicht7.txt",
+				"gehtnicht8.txt",
+				"gehtnicht9.txt",
+				"gehtnicht10.txt",
+				"gehtnicht11.txt",
+				"gehtnicht12.txt",
+				"minnumber.txt",
+				"pairing.txt",
+				"parallelpen.txt",
+				"partials.txt",
+				"prefexamp.txt",
+//				"deptinst1.txt",
+//				"deptinst2.txt"
 		};
 
 		for (String f : filenames)
