@@ -234,29 +234,22 @@ public class OTree
 
 		if (m_bInitialized && !Thread.currentThread().isInterrupted())
 		{
-//			m_eSol = checkGoal();
-
-			if (m_eSol != eSolution.UNKNOWN)
+			if (m_eSol == eSolution.YES)
 				return this; // Found a valid solution or we didn't
 
 			// Generate Leaves
 			this.altern();
 
-			m_eSol = checkGoal();
-
-			if (m_eSol != eSolution.UNKNOWN)
+			if (m_pLeafs.isEmpty())
+			{
+				m_eSol = eSolution.NO;
 				return this;
+			}
 
 			do    // Evaluate Leaves
 			{
 				// Grab Next Evaluation
-				if (!m_pLeafs.isEmpty())
-					pReturnTree = m_pLeafs.remove(0);
-				else
-				{
-					m_eSol = eSolution.NO;
-					return this;
-				}
+				pReturnTree = m_pLeafs.remove(0);
 
 				// Recurse
 				pReturnTree = pReturnTree.genSolution(iID);
@@ -284,14 +277,6 @@ public class OTree
 			SlotItem unassignedItem = m_pUnassignedList.remove(m_pRand.nextInt(m_pUnassignedList.size()));
 			ArrayList<Evaluated> validSlots = m_pAssigned.getViableTimeSlots(m_pTbl, unassignedItem);
 
-
-			// No Leafs could be generated? No Valid Solution.
-			if (validSlots.size() == 0)
-			{
-				m_eSol = eSolution.NO;
-				return;
-			}
-
 			// Generate Leafs based on evaluated assignments
 			for(Evaluated slot : validSlots)
 			{
@@ -302,10 +287,6 @@ public class OTree
 				// Generate Leaf base on that Prob
 				m_pLeafs.add( new OTree(m_pDept, pNxtAssign, m_pUnassignedList));
 			}
-		}
-		else
-		{
-			m_eSol = eSolution.YES;
 		}
 	}
 
