@@ -48,25 +48,26 @@ public class Main
 
 
 		String[] filenames = {
-				"gehtnicht1.txt",
-				"gehtnicht2.txt",
-				"gehtnicht3.txt",
-				"gehtnicht4.txt",
-				"gehtnicht5.txt",
-				"gehtnicht6.txt",
-				"gehtnicht7.txt",
-				"gehtnicht8.txt",
-				"gehtnicht9.txt",
-				"gehtnicht10.txt",
-				"gehtnicht11.txt",
-				"gehtnicht12.txt",
-				"minnumber.txt",
-				"pairing.txt",
-				"parallelpen.txt",
-				"partials.txt",
-				"prefexamp.txt",
-//				"deptinst1.txt",
-//				"deptinst2.txt"
+//				"gehtnicht1.txt",
+//				"gehtnicht2.txt",
+//				"gehtnicht3.txt",
+//				"gehtnicht4.txt",
+//				"gehtnicht5.txt",
+//				"gehtnicht6.txt",
+//				"gehtnicht7.txt",
+//				"gehtnicht8.txt",
+//				"gehtnicht9.txt",
+//				"gehtnicht10.txt",
+//				"gehtnicht11.txt",
+//				"gehtnicht12.txt",
+//				"minnumber.txt",
+//				"pairing.txt",
+//				"parallelpen.txt",
+//				"partials.txt",
+//				"prefexamp.txt",
+//				"deptinst3.txt",
+				"deptinst1.txt",
+				"deptinst2.txt"
 		};
 
 		for (String f : filenames)
@@ -168,7 +169,7 @@ public class Main
 
 	public static Department readFile(String fileName)
 	{
-		String line;
+		String line = "";
 		Input currentInfo = Input.UNKNOWN;
 
 		Department department = null;
@@ -177,7 +178,6 @@ public class Main
 		{
 			// FileReader reads text files in the default encoding.
 			FileReader fileReader = new FileReader(fileName);
-
 
 			// Always wrap FileReader in BufferedReader.
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -245,6 +245,7 @@ public class Main
 
 					String day = split[0].trim();
 					String time = split[1].trim();
+
 					int max = Integer.parseInt(split[2].trim());
 					int min = Integer.parseInt(split[3].trim());
 
