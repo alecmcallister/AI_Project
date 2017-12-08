@@ -19,6 +19,14 @@ public class Main
 		UNKNOWN
 	}
 
+    /**
+     * Main method.
+     * Parses arguments and passes them off to appropriate readers, then calls the input file parser
+     * and computes a solution.
+     *
+     * @param args The args to the program. This application takes one or two args, the first of which must be
+     *             an input filename/path, and the second of which is optionally a config file.
+     */
 	public static void main(String args[])
 	{
 		String fileName ;
@@ -55,11 +63,20 @@ public class Main
         ParseAndCompute(fileName);
 	}
 
+    /**
+     * Print to System.out the valid formats for running the program on the command line.
+     */
     public static void printFormats() {
-        System.out.println("    java 433gr8.jar <filename>");
-        System.out.println("    java 433gr8.jar <filename> <config-filename>");
+        System.out.println("    java (Main or JAR) <input-filename>");
+        System.out.println("    java (Main or JAR) <input-filename> <config-filename>");
     }
 
+    /**
+     * Parses a configuration file (properties file) for the Penalties values.
+     *
+     * @param configFile The configuration file containing Penalties.
+     * @throws IOException Thrown if the file cannot be opened.
+     */
     public static void readPenaltiesFromConfig(String configFile) throws IOException {
         Properties prop = new Properties();
         InputStream input = null;
@@ -95,11 +112,16 @@ public class Main
         }
     }
 
+    /**
+     * Parse an input file and compute the solution.
+     *
+     * @param fileName The input file name.
+     */
 	public static void ParseAndCompute(String fileName)
 	{
 		Department department = readFile(fileName);
 
-		ArrayList<Assignments> F = new ArrayList<Assignments>();
+		ArrayList<Assignments> F = new ArrayList<>();
 
 		ArrayList<SlotItem> unassigned = new ArrayList<>();
 		unassigned.addAll(department.getAllCourses());
@@ -109,9 +131,7 @@ public class Main
 		if (partial != null)
 			unassigned.removeAll(partial.getAllCourses());
 
-		OTree orTree = new OTree(department, partial, unassigned);
-
-		orTree = orTree.genSolution(0);
+		OTree orTree;
 
 		while (F.size() < 2)
 		{
@@ -179,13 +199,21 @@ public class Main
 		}
 		catch (Exception e)
 		{
+            System.err.println("[ERROR] Could write schedule to file. Printing to System.out.");
+            System.out.println("Eval = " + bestSchedule.getEvalScore() + "\n" + bestSchedule.toString());
 		}
 
 	}
 
+    /**
+     * Parses the input file and translates the contents into a Department object.
+     *
+     * @param fileName The name of the input file.
+     * @return A Department, containing all information in the input file.
+     */
 	public static Department readFile(String fileName)
 	{
-		String line = "";
+		String line;
 		Input currentInfo = Input.UNKNOWN;
 
 		Department department = null;
@@ -412,7 +440,6 @@ public class Main
 					int courseNum = Integer.parseInt(slotData[1]);
 					int secNum = Integer.parseInt(slotData[slotData.length - 1]);
 
-//                    department.addPartial(courseName, courseNum, secNum, isLab, day, time);
 					if (isLab)
 					{
 						department.addPartialLab(courseName, courseNum, secNum, day, time);
@@ -422,7 +449,6 @@ public class Main
 						department.addPartialLecture(courseName, courseNum, secNum, day, time);
 					}
 
-					// Do the department add partials thing here
 				}
 			}
 
@@ -430,17 +456,23 @@ public class Main
 		}
 		catch (FileNotFoundException ex)
 		{
-			System.out.println("Unable to open file, file not found '" + fileName + "'");
+			System.err.println("Unable to open file, file not found '" + fileName + "'");
 		}
 		catch (IOException ex)
 		{
-			System.out.println("Error reading file '" + fileName + "'");
+			System.err.println("Error reading file '" + fileName + "'");
 		}
 
-		//System.out.println("Reading file completed...");
 		return department;
 	}
 
+    /**
+     * Matches a string parsed from the input file to a SlotItem in an ArrayList.
+     *
+     * @param fromList The ArrayList to select from.
+     * @param dirty The parsed string to search for.
+     * @return The SlotItem that matches the String, if present in the array. Null if not.
+     */
 	public static SlotItem SelectItem(ArrayList<SlotItem> fromList, String dirty)
 	{
 		dirty = dirty.trim();

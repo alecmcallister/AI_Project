@@ -3,6 +3,12 @@ package ai.project;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * SetSearch class
+ *
+ * This class performs Set-based search logic.
+ * Primarily, it handles the mutation component of the search.
+ */
 public class SetSearch
 {
 	Department department;
@@ -12,6 +18,15 @@ public class SetSearch
 		this.department = department;
 	}
 
+    /**
+     * Given two parent sets of Assignments, select a parent to descend from.
+     * Tends towards picking the parent with the better eval score, but may not necessarily -- the
+     * choice is randomized.
+     *
+     * @param a One set of Assignments.
+     * @param b The other set of Assignments.
+     * @return Whichever of A or B has a lower eval score.
+     */
 	public Assignments ChooseParent(Assignments a, Assignments b)
 	{
 		int aEval = a.getEvalScore();
@@ -41,6 +56,14 @@ public class SetSearch
 		}
 	}
 
+    /**
+     * Perform the set-based search. Takes two sets of Assignments, which it may hybridize to
+     * create a new Assignments. On this new child, an Or-Tree is then run to generate a solution.
+     *
+     * @param a One Assignments parent.
+     * @param b The other Assignments parent.
+     * @return An Or-Tree, representing a solution that may descend from Assignments a and b.
+     */
 	public OTree DoTheSearchAlready(Assignments a, Assignments b)
 	{
 		ArrayList<SlotItem> evolutionList = new ArrayList<>();

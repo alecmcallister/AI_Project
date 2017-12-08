@@ -14,10 +14,11 @@ package ai.project;
  *  We also track weights:
  *  5. wMinFilled: The weight applied to the penalty for lectures or labs that do not meet the minimum value.
  *  6. wPref: The weight applied to the penalty for courses in the wrong place, in terms of preferences.
- *  7. wPair: The weight applied to the penalty for courses that are paired, yet still scheduled together.
+ *  7. wPair: The weight applied to the penalty for courses that are paired, yet scheduled apart.
  *  8. wSecDiff: The weight applied to the penalty for different sections of the same course scheduled together.
  *
  *  The purpose of the Penalties class is to simplify the passing of these penalty values throughout the application.
+ *  Penalties is a singleton because it is effectively global.
  */
 public class Penalties {
     private int courseMin;

@@ -4,7 +4,12 @@ import java.util.*;
 import java.util.concurrent.*;
 
 
-/*
+/**
+ * OTree class
+ *
+ * This class represents an Or-Tree for the Or-Tree based search.
+ * It is used to generate solutions, either from partial solutions or de novo.
+ *
  * OTree is a recursive tree in that every node of the OTree is, itself, an Or Tree as well.
  */
 public class OTree
@@ -15,7 +20,7 @@ public class OTree
 	{
 		NO,
 		YES,
-		UNKNOWN;
+		UNKNOWN
 	}
 
 	/*
@@ -30,7 +35,6 @@ public class OTree
 	private eSolution m_eSol;
 	private boolean m_bInitialized;
 	private Random m_pRand;
-	private final char MAX_THREADS = 8;
 
 	/********************************************************************************\
 	 * Getters/Setters																*
@@ -55,7 +59,7 @@ public class OTree
 		{
 			m_pDept = pDept;
 			m_pTbl = pDept.getTimeTable();
-			m_pLeafs = new ArrayList<OTree>();
+			m_pLeafs = new ArrayList<>();
 			m_pRand = new Random(System.currentTimeMillis());
 
 			if (pAssignedList == null)
@@ -82,77 +86,6 @@ public class OTree
 	}
 
 	/**
-	 * Reset the OTree with a new Department and a potential Partial assignment. **Does NOT check Assignment/Unassigned association**
-	 * If pAssignedList OR pUnassignedList is null, a fresh assignment is generated.
-	 *
-	 * @param pDept           New Department to generate Solution for.
-	 * @param pAssignedList   Partial Assignment for this department.
-	 * @param pUnassignedList Unassigned List for pAssignedList
-	 */
-	public void resetTree(Department pDept,
-	                      Assignments pAssignedList,
-	                      Collection<SlotItem> pUnassignedList)
-	{
-		m_pDept = pDept;
-		m_pTbl = pDept.getTimeTable();
-		m_pLeafs.clear();
-		m_pRand = new Random(System.currentTimeMillis());
-
-		// Default: start from s0
-		if (null == pAssignedList || null == pUnassignedList)
-		{
-			m_pAssigned = new Assignments(m_pTbl);        // Fresh Assignments
-			m_pUnassignedList = new ArrayList<>(pDept.getAllCourses());        // Fresh List of all Courses and Labs
-			m_eSol = eSolution.UNKNOWN;
-		}
-		else    // Start from given partial solution.
-		{
-			m_pAssigned = new Assignments(pAssignedList);
-			m_pUnassignedList = new ArrayList<>(pUnassignedList);
-			m_eSol = checkGoal();
-		}
-	}
-
-	/**
-	 * Generate a new partial assignment from the same department. **Does NOT check Assignment/Unassigned association**
-	 *
-	 * @param pAssignedList   Partial assignment.
-	 * @param pUnassignedList Unassigned List of Courses U Labs
-	 */
-	public void resetTree(Assignments pAssignedList,
-	                      Collection<SlotItem> pUnassignedList)
-	{
-		m_pLeafs.clear();
-		m_pRand = new Random(System.currentTimeMillis());
-
-		// Default: start from s0
-		if (null == pAssignedList || null == pUnassignedList)
-		{
-			m_pAssigned = new Assignments(m_pTbl);        // Fresh Assignments
-			m_pUnassignedList = new ArrayList<>(m_pDept.getAllCourses());        // Fresh List of all Courses and Labs
-			m_eSol = eSolution.UNKNOWN;
-		}
-		else    // Start from given partial solution.
-		{
-			m_pAssigned = new Assignments(pAssignedList);
-			m_pUnassignedList = new ArrayList<>(pUnassignedList);
-			m_eSol = checkGoal();
-		}
-	}
-
-	/**
-	 * Generate a Fresh starting point to generate from.
-	 */
-	public void resetTree()
-	{
-		m_pLeafs.clear();
-		m_pRand = new Random(System.currentTimeMillis());
-		m_pAssigned = new Assignments(m_pTbl);        // Fresh Assignments
-		m_pUnassignedList = new ArrayList<>(m_pDept.getAllCourses());    // Fresh List of all Courses and Labs
-		m_eSol = eSolution.UNKNOWN;
-	}
-
-	/**
 	 * Copy Constructor.
 	 *
 	 * @param pInitialNode Other Node to copy from.
@@ -161,61 +94,13 @@ public class OTree
 	{
 		m_pDept = pInitialNode.m_pDept;
 		m_pTbl = pInitialNode.m_pTbl;
-		m_pLeafs = new ArrayList<OTree>();
+		m_pLeafs = new ArrayList<>();
 		m_pLeafs.addAll(pInitialNode.m_pLeafs);
 		m_pRand = pInitialNode.m_pRand;
 		m_pAssigned = new Assignments(pInitialNode.m_pAssigned);
 		m_pUnassignedList = new ArrayList<>(pInitialNode.m_pUnassignedList);
 		m_eSol = pInitialNode.m_eSol;
 		m_bInitialized = true;
-	}
-
-	/**
-	 * Runs MAX_THREADS Threads on this OTree. Will return the first solution that's found.
-	 *
-	 * @return An OTree with a solution
-	 */
-	public OTree genSolutionAsync()
-	{
-		// Local Variables
-		ExecutorService pExecService = Executors.newFixedThreadPool(MAX_THREADS);
-		Set<CallableBranch> pCallables = new HashSet<CallableBranch>();
-		OTree pReturnSolution = null;
-
-		// Add Callable Elements (Threads)
-		for (int i = 0; i < MAX_THREADS; ++i)
-		{
-			pCallables.add(new CallableBranch(this, i));
-		}
-
-		// Await a return solution.
-		try
-		{
-			pReturnSolution = pExecService.invokeAny(pCallables);
-		}
-		catch (InterruptedException | ExecutionException e1)
-		{
-			e1.printStackTrace();
-		}
-
-
-		// Shutdown threads.
-		try
-		{
-			pExecService.shutdown();
-			pExecService.awaitTermination(5, TimeUnit.SECONDS);
-		}
-		catch (InterruptedException e2)
-		{
-			System.err.println("tasks interrupted");
-		}
-		finally
-		{
-			pExecService.shutdownNow();
-		}
-
-		// Return found solution
-		return pReturnSolution;
 	}
 
 	/**
@@ -287,54 +172,6 @@ public class OTree
 			}
 		}
 	}
-
-	/**
-	 * Generates a list of leaf nodes
-	 */
-	private void altaltern()
-	{
-		// Local Variables
-//		SlotItem pNewItem;
-
-		ArrayList<Evaluated> pLeafs = new ArrayList<>();
-		Assignments pNxtAssign;
-		m_pLeafs.clear(); // Clear Leafs at this level to force Depth-first search
-
-		// Check that Unassigned List is not empty, should have evaluated as valid solution before reaching here.
-		if (!m_pUnassignedList.isEmpty())
-		{
-			// Pull Item and get list of possible assignments
-//			pNewItem = m_pUnassignedList.remove(m_pRand.nextInt(m_pUnassignedList.size()));
-
-			for (SlotItem pNewItem : m_pUnassignedList)
-			{
-				pLeafs = m_pAssigned.getViableTimeSlots(m_pTbl, pNewItem);
-
-				// Generate Leafs based on evaluated assignments
-				for (Evaluated pEval : pLeafs)
-				{
-					// New Prob with the Evaluated Assignment
-					pNxtAssign = new Assignments(m_pAssigned);
-					pNxtAssign.addAssignment(pEval.getTimeSlot(), pNewItem);
-					ArrayList<SlotItem> unassCopy = new ArrayList<>();
-					unassCopy.addAll(m_pUnassignedList);
-					unassCopy.remove(pNewItem);
-					// Generate Leaf base on that Prob
-					m_pLeafs.add(new OTree(m_pDept, pNxtAssign, unassCopy));
-				}
-			}
-
-			// No Leafs could be generated? No Valid Solution.
-			if (pLeafs.isEmpty())
-			{
-				m_eSol = eSolution.NO;
-				return;
-			}
-			m_pUnassignedList.clear();
-
-		}
-	}
-
 
 	/**
 	 * Checks goal based on definition of Or-Tree Gv(s):
