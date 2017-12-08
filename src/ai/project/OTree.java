@@ -32,8 +32,6 @@ public class OTree
 	private Random m_pRand;
 	private final char MAX_THREADS = 8;
 
-	public static Penalties penalties = new Penalties(100, 100, 0, 100, 0, 1, 0, 0);
-
 	/********************************************************************************\
 	 * Getters/Setters																*
 	 \********************************************************************************/
@@ -62,7 +60,7 @@ public class OTree
 
 			if (pAssignedList == null)
 			{
-				m_pAssigned = new Assignments(penalties, m_pTbl);        // Fresh Assignments
+				m_pAssigned = new Assignments(m_pTbl);        // Fresh Assignments
 			}
 			else
 			{
@@ -103,7 +101,7 @@ public class OTree
 		// Default: start from s0
 		if (null == pAssignedList || null == pUnassignedList)
 		{
-			m_pAssigned = new Assignments(penalties, m_pTbl);        // Fresh Assignments
+			m_pAssigned = new Assignments(m_pTbl);        // Fresh Assignments
 			m_pUnassignedList = new ArrayList<>(pDept.getAllCourses());        // Fresh List of all Courses and Labs
 			m_eSol = eSolution.UNKNOWN;
 		}
@@ -130,7 +128,7 @@ public class OTree
 		// Default: start from s0
 		if (null == pAssignedList || null == pUnassignedList)
 		{
-			m_pAssigned = new Assignments(penalties, m_pTbl);        // Fresh Assignments
+			m_pAssigned = new Assignments(m_pTbl);        // Fresh Assignments
 			m_pUnassignedList = new ArrayList<>(m_pDept.getAllCourses());        // Fresh List of all Courses and Labs
 			m_eSol = eSolution.UNKNOWN;
 		}
@@ -149,7 +147,7 @@ public class OTree
 	{
 		m_pLeafs.clear();
 		m_pRand = new Random(System.currentTimeMillis());
-		m_pAssigned = new Assignments(penalties, m_pTbl);        // Fresh Assignments
+		m_pAssigned = new Assignments(m_pTbl);        // Fresh Assignments
 		m_pUnassignedList = new ArrayList<>(m_pDept.getAllCourses());    // Fresh List of all Courses and Labs
 		m_eSol = eSolution.UNKNOWN;
 	}

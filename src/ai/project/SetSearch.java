@@ -52,7 +52,7 @@ public class SetSearch
             child = new Assignments(department.getPartialAssignments());
         }
         else {
-            child = new Assignments(OTree.penalties, department.getTimeTable());
+            child = new Assignments(department.getTimeTable());
         }
 
 		ArrayList<SlotItem> unassigned = new ArrayList<>();

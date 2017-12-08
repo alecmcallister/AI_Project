@@ -25,13 +25,16 @@ public class Penalties {
     private int notPaired;
     private int section;
 
-    public int wMinFilled;
-    public int wPref;
-    public int wPair;
-    public int wSecDiff;
+    private int wMinFilled;
+    private int wPref;
+    private int wPair;
+    private int wSecDiff;
 
+    private static final Penalties instance = new Penalties(0, 0, 0, 0, 0, 0, 0, 0);
 
-    public Penalties(int courseMin, int labsMin, int notPaired, int section,
+    public static Penalties getInstance() { return instance; }
+
+    private Penalties(int courseMin, int labsMin, int notPaired, int section,
     			int wMinFilled, int wPref, int wPair, int wSecDiff) {
         this.courseMin = courseMin;
         this.labsMin = labsMin;
@@ -43,21 +46,70 @@ public class Penalties {
         this.wSecDiff = wSecDiff;
     }
 
+
+    // ----------- Getters and Setters -------------
+
     public int getCourseMin() {
         return courseMin;
+    }
+
+    public void setCourseMin(int courseMin) {
+        this.courseMin = courseMin;
     }
 
     public int getLabsMin() {
         return labsMin;
     }
 
+    public void setLabsMin(int labsMin) {
+        this.labsMin = labsMin;
+    }
+
     public int getNotPaired() {
         return notPaired;
+    }
+
+    public void setNotPaired(int notPaired) {
+        this.notPaired = notPaired;
     }
 
     public int getSection() {
         return section;
     }
 
-  
+    public void setSection(int section) {
+        this.section = section;
+    }
+
+    public int getwMinFilled() {
+        return wMinFilled;
+    }
+
+    public void setwMinFilled(int wMinFilled) {
+        this.wMinFilled = wMinFilled;
+    }
+
+    public int getwPref() {
+        return wPref;
+    }
+
+    public void setwPref(int wPref) {
+        this.wPref = wPref;
+    }
+
+    public int getwPair() {
+        return wPair;
+    }
+
+    public void setwPair(int wPair) {
+        this.wPair = wPair;
+    }
+
+    public int getwSecDiff() {
+        return wSecDiff;
+    }
+
+    public void setwSecDiff(int wSecDiff) {
+        this.wSecDiff = wSecDiff;
+    }
 }

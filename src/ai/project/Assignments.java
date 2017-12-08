@@ -24,34 +24,30 @@ import java.util.*;
 public class Assignments
 {
 	private HashMap<TimeSlot, HashSet<SlotItem>> assignments;
-	private Penalties penalties;
 	private int evalScore;
 	private HashMap<SlotItem, UnfilledPairs> unfilledPairsMap;
 
 	/**
 	 * Default constructor. Creates a new map of TimeSlots to courses.
 	 *
-	 * @param penalties Penalties for the department. Needed, as otherwise evaluation methods won't make any sense.
 	 * @param table     TimeTable is required to calculate a baseline penalty for the total number of courses and labs with minimums.
 	 */
-	public Assignments(Penalties penalties, TimeTable table)
+	public Assignments(TimeTable table)
 	{
 		assignments = new HashMap<>();
-		this.penalties = penalties;
-		evalScore = (table.getTotalLabsWithMinimum() * penalties.getLabsMin() * penalties.wMinFilled)
-				+ (table.getTotalLecturesWithMinimum() * penalties.getCourseMin() * penalties.wMinFilled);
+		evalScore = (table.getTotalLabsWithMinimum() * Penalties.getInstance().getLabsMin() * Penalties.getInstance().getwMinFilled())
+				+ (table.getTotalLecturesWithMinimum() * Penalties.getInstance().getCourseMin() * Penalties.getInstance().getwMinFilled());
 		unfilledPairsMap = new HashMap<>();
 	}
 
 	/**
-	 * Copy constructor. Basically just copies the assignment HashMap, Penalties, and eval score.
+	 * Copy constructor. Basically just copies the assignment HashMap and eval score.
 	 *
 	 * @param other The Assignments to copy.
 	 */
 	public Assignments(Assignments other)
 	{
 		this.assignments = other.getAllAssignments();
-		this.penalties = other.getPenalties();
 		this.evalScore = other.getEvalScore();
 		this.unfilledPairsMap = other.getUnfilledPairsMap();
 	}
@@ -71,16 +67,20 @@ public class Assignments
 				|| (timeSlot.isLabSlot() && !item.isLecture()))
 		{
 			HashSet<SlotItem> set = assignments.get(timeSlot);
+
 			if (set == null)
 			{
 				// Create a new assignment for this TimeSlot if one doesn't exist
 				set = new HashSet<>();
 				assignments.put(timeSlot, set);
 			}
+            else if (set.contains(item)) return;
+
 			set.add(item);
 
 			// Adjust eval for this Assignments instance.
-			evalScore = eval(timeSlot, item).getEval();
+            int oldEval = evalScore;
+            evalScore = eval(timeSlot, item).getEval();
 
 			// Handle pairs. We track unfilled pairs as we go so that we don't have to search the entire set of
 			// Assignments every time we evaluate soft constraints. The actual eval adjustment is done with the
@@ -219,16 +219,6 @@ public class Assignments
         }
         return rv;
     }
-
-    /**
-     * Get the set of penalties used for these Assignments.
-     *
-     * @return The set of penalties used for these Assignments.
-     */
-	public Penalties getPenalties()
-	{
-		return penalties;
-	}
 
     /**
      * Gets the commited eval score for these Assignments -- that is, the eval score as it stands for all courses
@@ -551,14 +541,15 @@ public class Assignments
 			// Currently below min. Subtract penalty if adding one new item will put us over
 			if (numAssigned + 1 >= timeSlot.getMin())
 			{
-				val -= item.isLecture() ? (penalties.getCourseMin() * penalties.wMinFilled) : (penalties.getLabsMin() * penalties.wMinFilled);
+				val -= item.isLecture() ? (Penalties.getInstance().getCourseMin() * Penalties.getInstance().getwMinFilled())
+                        : (Penalties.getInstance().getLabsMin() * Penalties.getInstance().getwMinFilled());
 			}
 		}
 
 		// Check for a change in preferences. The only way the penalty imposed by assignments can go down is if we
 		// removed Assignments. Since all we are going to do is add them, not remove them, the penalty can only increase
 		// in this step, if it changes at all.
-		val += (item.getPreferencesForOtherSlots(timeSlot) * penalties.wPref);
+		val += (item.getPreferencesForOtherSlots(timeSlot) * Penalties.getInstance().getwPref());
 
 		// Check for a change in pairs.
 		if (item.hasPairs())
@@ -568,7 +559,7 @@ public class Assignments
 				UnfilledPairs unfilledPairs = unfilledPairsMap.get(paired);
 				if ((unfilledPairs != null) && (unfilledPairs.expectsPair(item)))
 				{
-					if (!unfilledPairs.getTimeSlot().equals(timeSlot)) val += (penalties.getNotPaired() * penalties.wPair);
+					if (!unfilledPairs.getTimeSlot().equals(timeSlot)) val += (Penalties.getInstance().getNotPaired() * Penalties.getInstance().getwPair());
 				}
 			}
 		}
@@ -581,9 +572,10 @@ public class Assignments
 			{
 				if (((item.isLecture() && assigned.isLecture())
 						|| (!item.isLecture() && !assigned.isLecture()))
-						&& item.sameCourse(assigned))
+						&& item.sameCourse(assigned)
+                        && !item.equals(assigned))
 				{
-					val += (penalties.getSection() * penalties.wSecDiff);
+					val += (Penalties.getInstance().getSection() * Penalties.getInstance().getwSecDiff());
 				}
 			}
 		}

@@ -21,58 +21,79 @@ public class Main
 
 	public static void main(String args[])
 	{
-		String fileName1 = "";
-		String dir = "";
-		if (System.getProperty("os.name").equals("Mac OS X"))
-		{
-			dir = "/";
-		}
+		String fileName ;
+        if ((args.length < 1) || (args.length > 2)) {
+            System.out.println("Insufficient arguments. Accepted formats:");
+            printFormats();
+            System.out.println("Aborting.");
+            System.exit(-1);
+        }
+        fileName = args[0];
+        if (args.length == 2) {
+            try {
+                readPenaltiesFromConfig(args[1]);
+            }
+            catch (IOException ioex) {
+                System.err.println("Could not read config file. Aborting.");
+                System.exit(-2);
+            }
+        }
+        else {
+            System.out.println("No config file provided on command line. Trying default 'config.properties' in" +
+                    " current dir...");
+            try {
+                readPenaltiesFromConfig("config.properties");
+                System.out.println("Config file read successfully.");
+            }
+            catch (IOException ioex) {
+                System.out.println("Could not open config.properties in current dir.");
+                System.out.println("Continuing with penalties all set to 0.");
+            }
+        }
 
-		else
-		{
-			dir = "\\";
-		}
-
-		if (args.length > 0)
-		{
-			fileName1 = args[0];
-		}
-		else
-		{
-			fileName1 = System.getProperty("user.dir") + dir + "gehtnicht1.txt";
-		}
-
-
-		String[] filenames = {
-//				"gehtnicht1.txt",
-//				"gehtnicht2.txt",
-//				"gehtnicht3.txt",
-//				"gehtnicht4.txt",
-//				"gehtnicht5.txt",
-//				"gehtnicht6.txt",
-//				"gehtnicht7.txt",
-//				"gehtnicht8.txt",
-//				"gehtnicht9.txt",
-//				"gehtnicht10.txt",
-//				"gehtnicht11.txt",
-//				"gehtnicht12.txt",
-//				"minnumber.txt",
-//				"pairing.txt",
-//				"parallelpen.txt",
-//				"partials.txt",
-//				"prefexamp.txt",
-//				"deptinst3.txt",
-				"deptinst1.txt",
-				"deptinst2.txt"
-		};
-
-		for (String f : filenames)
-		{
-			System.out.println("Testing " + f);
-			f = System.getProperty("user.dir") + dir + f;
-			ParseAndCompute(f);
-		}
+        System.out.println("------------------");
+        ParseAndCompute(fileName);
 	}
+
+    public static void printFormats() {
+        System.out.println("    java 433gr8.jar <filename>");
+        System.out.println("    java 433gr8.jar <filename> <config-filename>");
+    }
+
+    public static void readPenaltiesFromConfig(String configFile) throws IOException {
+        Properties prop = new Properties();
+        InputStream input = null;
+
+        try {
+            // Set up stream
+            input = new FileInputStream(configFile);
+
+            // Load config file
+            prop.load(input);
+
+            // Get properties and assign them to the Penalties instance
+            Penalties penalties = Penalties.getInstance();
+
+            penalties.setCourseMin(Integer.parseInt(prop.getProperty("penCourseMin")));
+            penalties.setLabsMin(Integer.parseInt(prop.getProperty("penLabsMin")));
+            penalties.setNotPaired(Integer.parseInt(prop.getProperty("penNotPaired")));
+            penalties.setSection(Integer.parseInt(prop.getProperty("penSection")));
+            penalties.setwMinFilled(Integer.parseInt(prop.getProperty("wMinFilled")));
+            penalties.setwPref(Integer.parseInt(prop.getProperty("wPref")));
+            penalties.setwPair(Integer.parseInt(prop.getProperty("wPair")));
+            penalties.setwSecDiff(Integer.parseInt(prop.getProperty("wSecDiff")));
+        }
+        finally {
+            if (input != null) {
+                try {
+                    input.close();
+                }
+                catch (IOException ioex) {
+                    System.err.println("Warning: could not close config file.");
+                }
+            }
+        }
+    }
 
 	public static void ParseAndCompute(String fileName)
 	{
@@ -136,7 +157,6 @@ public class Main
 			else if (temp.getAssignments().getEvalScore() < best.getAssignments().getEvalScore())
 			{
 				best = temp;
-				System.out.println("New best eval: " + best.getAssignments().getEvalScore());
 
 				if (temp.getAssignments().getEvalScore() == 0)
 					break;

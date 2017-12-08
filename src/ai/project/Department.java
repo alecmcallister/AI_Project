@@ -24,7 +24,6 @@ public class Department
 	private TimeTable timeTable;
 	private CourseTable courseTable;
 	private Assignments partialAssignments;
-	private Penalties penalties;
 
 	/**
 	 * Base constructor. Sets name and initializes tables.
@@ -40,39 +39,7 @@ public class Department
 		this.departmentName = departmentName;
 		timeTable = new TimeTable();
 		courseTable = new CourseTable();
-		penalties = new Penalties(0, 0, 0, 0, 0, 0, 0, 0);
 	}
-
-	/**
-	 * Constructor that takes a Penalties instance.
-	 * Presumably, regardless of how penalties are passed in, we can construct the Penalties object somewhere else.
-	 * If we can pass them in through the constructor (i.e. penalty values are known before we need to start
-	 * parsing) then we can set them here.
-	 * <p>
-	 * Partial Assignments are not created here, because they rely on the TimeTable having already been made.
-	 *
-	 * @param departmentName The name of the new department.
-	 */
-	public Department(String departmentName, Penalties penalties)
-	{
-		this.departmentName = departmentName;
-		timeTable = new TimeTable();
-		courseTable = new CourseTable();
-		this.penalties = penalties;
-	}
-
-	/**
-	 * Set the Penalties for the Department. This should be used if, for some reason, we won't know the Penalties
-	 * before initialization. If that is the case, then the constructor that takes a Penalties instance should be
-	 * used instead.
-	 *
-	 * @param penalties The soft constraint Penalties to be used for this Department.
-	 */
-	public void setPenalties(Penalties penalties)
-	{
-		this.penalties = penalties;
-	}
-
 
 	// ------------- Data Adders -------------
 
@@ -143,7 +110,7 @@ public class Department
 	{
 		if (partialAssignments == null)
 		{
-			partialAssignments = new Assignments(penalties, timeTable);
+			partialAssignments = new Assignments(timeTable);
 		}
 		TimeSlot slot = timeTable.getSlot(day, time, false /*isLab*/);
 		SlotItem course;
@@ -172,7 +139,7 @@ public class Department
 	{
 		if (partialAssignments == null)
 		{
-			partialAssignments = new Assignments(penalties, timeTable);
+			partialAssignments = new Assignments(timeTable);
 		}
 		TimeSlot slot = timeTable.getSlot(day, time, true /*isLab*/);
 		SlotItem course;
