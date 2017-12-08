@@ -30,6 +30,7 @@ public class TimeTable {
         labSlots = new HashMap<>();
         totalLecturesWithMinimum = 0;
         totalLabsWithMinimum = 0;
+        slots.clear();
     }
 
     /**

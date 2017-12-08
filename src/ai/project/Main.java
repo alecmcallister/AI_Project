@@ -159,7 +159,7 @@ public class Main
 			bestSchedule = best.getAssignments();
 
 
-		System.out.println("Eval = " + bestSchedule.getEvalScore() + "\n");
+		System.out.println("Eval = " + bestSchedule.getEvalScore() + "\n" + bestSchedule.toString() + "\n\n");
 
 	}
 
