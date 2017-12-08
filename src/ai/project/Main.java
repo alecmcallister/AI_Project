@@ -119,6 +119,7 @@ public class Main
      */
 	public static void ParseAndCompute(String fileName)
 	{
+        System.out.println("Searching for solution for " + fileName + ".");
 		Department department = readFile(fileName);
 
 		ArrayList<Assignments> F = new ArrayList<>();
@@ -128,15 +129,15 @@ public class Main
 
 		Assignments partial = department.getPartialAssignments();
 
+
 		if (partial != null)
 			unassigned.removeAll(partial.getAllCourses());
 
 		OTree orTree;
 
-		while (F.size() < 2)
+        while (F.size() < 2)
 		{
 			orTree = new OTree(department, department.getPartialAssignments(), unassigned);
-
 			orTree = orTree.genSolution(0);
 
 			if (orTree.isValid())
@@ -191,18 +192,17 @@ public class Main
 			bestSchedule = best.getAssignments();
 
 
-		System.out.println("Eval = " + bestSchedule.getEvalScore() + "\n" + bestSchedule.toString() + "\n\n");
+        System.out.println();
+		System.out.println("Eval-value: " + bestSchedule.getEvalScore() + "\n" + bestSchedule.toString() + "\n\n");
 
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName.replace(".txt", "_schedule.txt")), "utf-8")))
 		{
-			writer.write("Eval = " + bestSchedule.getEvalScore() + "\n" + bestSchedule.toString());
+			writer.write("Eval-value: " + bestSchedule.getEvalScore() + "\n" + bestSchedule.toString());
 		}
 		catch (Exception e)
 		{
-            System.err.println("[ERROR] Could write schedule to file. Printing to System.out.");
-            System.out.println("Eval = " + bestSchedule.getEvalScore() + "\n" + bestSchedule.toString());
+            System.err.println("[ERROR] Could write schedule to file.");
 		}
-
 	}
 
     /**
@@ -278,7 +278,7 @@ public class Main
 					currentInfo = Input.PART_ASSIGN;
 					line = bufferedReader.readLine();
 				}
-				if (line.length() == 0)
+				if (line == null || line.length() == 0)
 				{
 					currentInfo = Input.UNKNOWN;
 				}

@@ -631,34 +631,32 @@ public class Assignments
 		}
 	}
 
+    @Override
 	public String toString()
 	{
 		String result = "";
 
+        ArrayList<String> outStrings = new ArrayList<>();
+
 		for (TimeSlot timeslot : assignments.keySet())
 		{
-			String dayTime = String.format("%.2f, ", timeslot.getTime()).replace(".", ":");
-			switch (timeslot.getTimePair().getType())
-			{
-				case TT_LAB:
-				case TT_LEC:
-					dayTime = "TU, " + dayTime;
-					break;
-				case MW_LAB:
-				case MWF_LEC:
-					dayTime = "MO, " + dayTime;
-					break;
-				case F_LAB:
-					dayTime = "FR, " + dayTime;
-					break;
-			}
-
-			for (SlotItem s : assignments.get(timeslot))
-				result += dayTime + s.toString().replace("[", "").replace("]", "") + "\n";
+			String dayTime = timeslot.getTimePair().toString();
+			for (SlotItem s : assignments.get(timeslot)) {
+                String slotItemName = String.format("%-30s", s.toString().replace("[", "").replace("]", ""));
+                String adder = slotItemName + " : " + dayTime;
+                outStrings.add(adder);
+            }
 		}
+
+        Collections.sort(outStrings);
+
+        for (String entry : outStrings) {
+            result += entry + "\n";
+        }
 
 		return result;
 	}
+
 }
 
 

@@ -116,27 +116,28 @@ public class TimePair {
         String rv = "";
         switch (type) {
             case MWF_LEC:
-                rv = "MWF Lec ";
+                rv = "MO, ";
                 break;
             case TT_LEC:
-                rv = "TuTh Lec ";
+                rv = "TU, ";
                 break;
             case MW_LAB:
-                rv = "MW Lab ";
+                rv = "MO, ";
                 break;
             case TT_LAB:
-                rv = "TuTh Lab ";
+                rv = "TU, ";
                 break;
             case F_LAB:
-                rv = "Fri Lab ";
+                rv = "FR, ";
                 break;
             default:
                 break;
         }
 
         Double temp = Math.floor(time);
-        rv += temp.intValue() + ":";
-        rv += (time > temp) ? "30" : "00";
+        String timeAdd = temp.intValue() + ":";
+        timeAdd += (time > temp) ? "30" : "00";
+        rv += String.format("%5s", timeAdd);
 
         return rv;
     }
